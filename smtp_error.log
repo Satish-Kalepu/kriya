@@ -1,0 +1,168 @@
+CONNECTION: fsockopen(tcp://smtp.gmail.com)
+220 smtp.gmail.com ESMTP 24sm33892372pfr.75 - gsmtp
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+STARTTLS
+220 2.0.0 Ready to start TLS
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+AUTH LOGIN
+334 VXNlcm5hbWU6
+
+a3JpeWFvbmxpbmUuYWxlcnRAZ21haWwuY29t
+334 UGFzc3dvcmQ6
+
+R29vZ2xlMjAxOUphbiFAIyQl
+235 2.7.0 Accepted
+
+MAIL FROM: &lt;kriyaonline.alert@gmail.com&gt;
+250 2.1.0 OK 24sm33892372pfr.75 - gsmtp
+
+RCPT TO: &lt;kgbveg.maredumilli@gmail.com&gt;
+250 2.1.5 OK 24sm33892372pfr.75 - gsmtp
+
+RCPT TO: &lt;ksatish21@gmail.com&gt;
+250 2.1.5 OK 24sm33892372pfr.75 - gsmtp
+
+DATA
+<b>Was a timeout in Server response</b>CONNECTION: fsockopen(tcp://smtp.gmail.com)
+220 smtp.gmail.com ESMTP f13sm34169755pfa.132 - gsmtp
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+STARTTLS
+220 2.0.0 Ready to start TLS
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+AUTH LOGIN
+334 VXNlcm5hbWU6
+
+a3JpeWFvbmxpbmUuYWxlcnRAZ21haWwuY29t
+334 UGFzc3dvcmQ6
+
+R29vZ2xlMjAxOUphbiFAIyQl
+235 2.7.0 Accepted
+
+MAIL FROM: &lt;kriyaonline.alert@gmail.com&gt;
+250 2.1.0 OK f13sm34169755pfa.132 - gsmtp
+
+RCPT TO: &lt;kgbveg.maredumilli@gmail.com&gt;
+250 2.1.5 OK f13sm34169755pfa.132 - gsmtp
+
+RCPT TO: &lt;ksatish21@gmail.com&gt;
+250 2.1.5 OK f13sm34169755pfa.132 - gsmtp
+
+DATA
+354  Go ahead f13sm34169755pfa.132 - gsmtp
+
+Date: Fri, 25 Jan 2019 12:00:33 +0530
+To: kgbveg.maredumilli@gmail.com
+From: kriyaonline.alert@gmail.com
+Bcc: ksatish21@gmail.com
+Reply-To: kriyaonline@gmail.com
+Subject: =?UTF-8?B?S3JpeWEgUGFydGljaXBhdGlvbiBDb25maXJtYXRpb24=?=
+Message-ID: &lt;36b9hqhvxrm1.15tgzngs9xioz@register.kriyaonline.org&gt;
+X-Mailer: PHP/7.0.31
+MIME-Version: 1.0
+Content-Type: text/html; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: 8bit
+
+&lt;p&gt;Dear P VENKATALAKSHMI&lt;/p&gt;&lt;p&gt;Thank you for your participation.&lt;/p&gt;&lt;p&gt;Your registration number: &lt;b&gt;095&lt;/b&gt;&lt;/p&gt;&lt;p&gt;School:  KGBV MAREDUMILLI  -  MAREDUMILLI &lt;/p&gt;&lt;p&gt;Phone: 9441942838&lt;/p&gt;&lt;p&gt;Email: kgbveg.maredumilli@gmail.com&lt;/p&gt;&lt;p&gt;Total Students Nominated: 11&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Note: Take enough time to analyze availability, skills, and interests of the students.&lt;/p&gt;&lt;p&gt;Properly plan participating groups and preparation with your students for the best outcome&lt;/p&gt;&lt;p&gt;You can pick/change nominations of your choice until Feb 11th 2019.&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Best Regards,&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Kriya Team&lt;/p&gt;&lt;p&gt;7288822599, 8332993993&lt;/p&gt;
+.
+<b>Was a timeout in Server response</b>CONNECTION: fsockopen(tcp://smtp.gmail.com)
+220 smtp.gmail.com ESMTP c7sm34011135pfh.18 - gsmtp
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+STARTTLS
+220 2.0.0 Ready to start TLS
+
+EHLO register.kriyaonline.org
+250-smtp.gmail.com at your service, [103.11.84.62]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+AUTH LOGIN
+334 VXNlcm5hbWU6
+
+a3JpeWFvbmxpbmUuYWxlcnRAZ21haWwuY29t
+334 UGFzc3dvcmQ6
+
+R29vZ2xlMjAxOUphbiFAIyQl
+235 2.7.0 Accepted
+
+MAIL FROM: &lt;kriyaonline.alert@gmail.com&gt;
+250 2.1.0 OK c7sm34011135pfh.18 - gsmtp
+
+RCPT TO: &lt;kgbveg.maredumilli@gmail.com&gt;
+250 2.1.5 OK c7sm34011135pfh.18 - gsmtp
+
+RCPT TO: &lt;ksatish21@gmail.com&gt;
+250 2.1.5 OK c7sm34011135pfh.18 - gsmtp
+
+DATA
+354  Go ahead c7sm34011135pfh.18 - gsmtp
+
+Date: Fri, 25 Jan 2019 12:02:04 +0530
+To: kgbveg.maredumilli@gmail.com
+From: kriyaonline.alert@gmail.com
+Bcc: ksatish21@gmail.com
+Reply-To: kriyaonline@gmail.com
+Subject: =?UTF-8?B?S3JpeWEgUGFydGljaXBhdGlvbiBDb25maXJtYXRpb24=?=
+Message-ID: &lt;447wu2vv7k9w.l47ypskrgwd4@register.kriyaonline.org&gt;
+X-Mailer: PHP/7.0.31
+MIME-Version: 1.0
+Content-Type: text/html; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: 8bit
+
+&lt;p&gt;Dear P VENKATALAKSHMI&lt;/p&gt;&lt;p&gt;Thank you for your participation.&lt;/p&gt;&lt;p&gt;Your registration number: &lt;b&gt;095&lt;/b&gt;&lt;/p&gt;&lt;p&gt;School:  KGBV MAREDUMILLI  -  MAREDUMILLI &lt;/p&gt;&lt;p&gt;Phone: 9441942838&lt;/p&gt;&lt;p&gt;Email: kgbveg.maredumilli@gmail.com&lt;/p&gt;&lt;p&gt;Total Students Nominated: 11&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Note: Take enough time to analyze availability, skills, and interests of the students.&lt;/p&gt;&lt;p&gt;Properly plan participating groups and preparation with your students for the best outcome&lt;/p&gt;&lt;p&gt;You can pick/change nominations of your choice until Feb 11th 2019.&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Best Regards,&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Kriya Team&lt;/p&gt;&lt;p&gt;7288822599, 8332993993&lt;/p&gt;
+.
+<b>Was a timeout in Server response</b>Socket connection error: tcp://smtp.gmail.comSocket connection error: tcp://smtp.gmail.comSocket connection error: tcp://smtp.gmail.com
