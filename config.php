@@ -86,15 +86,6 @@ $config_categories  = array(
 	"enabled"=> array( 0, 1, 1), 
 	"max"=> array( 0, [1,3], [1,3] )
 	), 
-"11"=> array( 
-	"sno"=> "11", 
-	"name"=> "క్విజ్ - గ్రూప్ (ఇద్దరు)", 
-	"english"=> "Quiz", 
-	"details"=>"మొదటి రౌండు వ్రాత పరీక్ష. తదుపరి రౌండ్లు మౌఖికం   .", 
-	"enabled"=> array( 0, 2, 2), 
-	"max"=> array( 0, [2,2], [2,2] ),
-	"group"=>true
-	), 
 "12"=> array( 
 	"sno"=> "12", 
 	"name"=> "డిబేట్ - గ్రూప్ (ముగ్గురు)", 
