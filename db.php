@@ -17,11 +17,9 @@ if( $_SERVER['HTTP_HOST'] == "kriyaonline.org" ||  $_SERVER['HTTP_HOST'] == "www
 	$pass = "kriya";
 	$db = "kriya_2018";
 	$host = "localhost";
-
 }else{
 	$user = "kriya";
 	$pass = "kriya";
-
 	$db = "kriya";
 	$host = "localhost";
 }
