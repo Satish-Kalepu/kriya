@@ -12,7 +12,7 @@
 
 	if( $_GET['enable'] == "special" ){
 		$_SESSION['special'] = "yes";
-		header("Location: /?special_login_enabled");
+		header("Location: ".$site_path."?special_login_enabled");
 		exit;
 	}
 
@@ -24,7 +24,7 @@
 		if( $module ){
 			if( is_numeric($module) ){
 				if( $module != $_SESSION['school_id'] ){
-					header("Location: /?retry");exit;
+					header("Location: ".$site_path."?retry");exit;
 				}
 			}
 		}
@@ -133,7 +133,7 @@
 		}
 	</script>
 	<div class="logo" align="center">
-		<img src="/kriya_9.jpg" style="width:100%; max-width:1248px;" >
+		<img src="<?=$site_path?>kriya_9.jpg" style="width:100%; max-width:1248px;" >
 	</div>
 <?php	
 if( $_GET['action'] == "logout" ){?>
@@ -287,10 +287,10 @@ if( $_GET['action'] == "logout" ){?>
 	<p style='color:white; font-weight:bold;'>మీరు ఫిబ్రవరి 11 వరకు ఎంట్రీలను సవరించవచ్చు.  ఒక పాఠశాలకు 40 మందికి మాత్రమే అనుమతి ఉంది.</p>	
 	</center>
 	<div align="center">
-		<img src="/kriya_7.jpg" >
+		<img src="<?=$site_path?>kriya_7.jpg" >
 	</div>
 	<div align="center">
-		<img src="/kriya_8.jpg" >
+		<img src="<?=$site_path?>kriya_8.jpg" >
 	</div>		
 			
 <?php	}?>
