@@ -9,7 +9,7 @@
 	/*echo "<pre>";
 	print_r( $config_categories );
 	echo "</pre>";*/
-
+	$_SESSION['special'] = "yes";
 	if( $_GET['enable'] == "special" ){
 		$_SESSION['special'] = "yes";
 		header("Location: ".$site_path."?special_login_enabled");

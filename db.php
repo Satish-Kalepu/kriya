@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE  & ~E_WARNING );
 ini_set( "default_charset", "utf-8" );
-$site_path ="/kriya/";
+$site_path ="/";
 
 if( preg_match("/kriyaonline/", $_SERVER['REQUEST_URI'] ) ){
 	header("Location: /register/");
