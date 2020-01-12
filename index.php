@@ -10,7 +10,7 @@
 	print_r( $config_categories );
 	echo "</pre>";*/
 
-	if( $_GET['enable'] == "special" ){
+	if( $_GET['enable'] == "special" ){  
 		$_SESSION['special'] = "yes";
 		header("Location: /?special_login_enabled");
 		exit;

@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 ini_set( "default_charset", "utf-8" );
 
 if( preg_match("/kriyaonline/", $_SERVER['REQUEST_URI'] ) ){
@@ -17,6 +18,7 @@ if( $_SERVER['HTTP_HOST'] == "kriyaonline.org" ||  $_SERVER['HTTP_HOST'] == "www
 	$pass = "kriya";
 	$db = "kriya_2018";
 	$host = "localhost";
+
 
 }else{
 	$user = "kriya";
