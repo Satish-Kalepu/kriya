@@ -1,0 +1,21 @@
+php_value date.timezone 'Asia/Kolkata'
+php_value short_open_tag 1
+php_value post_max_size 20M
+php_value upload_max_filesize 5M
+php_value memory_limit 256M
+php_value max_execution_time 60
+php_value max_input_time 20
+php_value error_reporting 30709
+php_value session.cookie_lifetime 86400
+
+php_value session.cookie_httponly 1
+php_value display_startup_errors On
+php_value display_errors On
+php_value html_errors Off
+php_value log_errors On
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$   index.php?module=$1 [QSA,L]
