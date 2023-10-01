@@ -1,5 +1,6 @@
 <?php
 	session_start();
+	include('../config_global.php');
 	include('db.php');
 	include('config.php');
 	include('config_telugu_names.php');

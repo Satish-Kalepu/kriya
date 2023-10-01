@@ -12,6 +12,7 @@
 		exit;
 	}
 
+	include('../config_global.php');
 	include('db.php');
 	include('config.php');
 	//include('config_telugu_names.php');
@@ -482,10 +483,10 @@ if( $_GET['action'] == "logout" ){?>
 		<BR><BR><a href='?event=recheck' >Recheck Submission</a><BR><BR><BR>
 		<a href='?action=logout' >Logout</a><BR><BR>
 	</div>
-<?php	}else if( $module && $param1 == "review" ){ ?>
+<?php }else if( $module && $param1 == "review" ){ ?>
 	<p>Review</p>
 	<?php require("index_review.php"); ?>
-<?php	}else{ ?>
+<?php }else{ ?>
 	<form method='post' onsubmit="return validate_form()" >
 		<div id='registration_form_div' align='left' style='width:100%;max-width:100%;border:2px solid white; background-color:#ffef96; border-radius:5px; padding:10px; margin:auto;' >
 			<div align="right" style="padding-right:50px;"><a href='?action=logout' >Logout</a><BR><BR></div>

@@ -9,11 +9,7 @@ use Aws\Exception\AwsException;
 // using an AWS Region other than US West (Oregon). Change the value of the
 // profile parameter if you want to use a profile in your credentials file
 // other than the default.
-$config_ses_key = "AKIAU4FESPPFLRYSBGBG";
-$config_ses_secret = "GDDCmMwk0fgQXWvnneFku3i+260SBlO3XJCa8fFk";
-
-$config_ses_key = "AKIAU4FESPPFJUMPTJPO";
-$config_ses_secret = "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";
+require("../config_global.php");
 
 $SesClient = new SesClient([
     //'profile' => 'default',

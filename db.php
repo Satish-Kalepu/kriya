@@ -1,8 +1,5 @@
 <?php
 
-$config_ses_key = "AKIAU4FESPPFCJ4IGH7Y";
-$config_ses_secret = "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";
-
 if( $_SERVER['HTTP_HOST'] == "kriyaonline.org" ||  $_SERVER['HTTP_HOST'] == "www.kriyaonline.org" ){
 	$user = "kriya";
 	$pass = "Ch!ldrenFest!va1";
