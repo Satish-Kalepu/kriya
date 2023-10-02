@@ -106,7 +106,9 @@
 		font-size:14px;
 		font-family:arial;
 	}
-	div,p,input,select{ padding:2px; }
+	div,p,input{ padding:2px; }
+	.ddd div{padding: 0px;}
+	sselect{ padding:2px; }
 	.input_div{ border:1px solid #f0a0a0;  line-height:25px; width:100%; background-color:white !important;  }
 	.int{ border:1px solid #f0a0a0; border-radius:5px; line-height:25px; width:100%; background-color:white !important;  }
 	//.btn{background-color: #4CAF50;border: none;color: white;margin: 4px 2px;cursor: pointer;}
@@ -117,6 +119,8 @@
 	@media only screen and (min-width: 700px) {
 		table.ddd td{ border-bottom:1px solid white; border-right:1px solid white; }
 	}
+
+	.ddd select{min-width:50px;}
 
 	.sticky1{ position: sticky; top:0px; }
 	.sticky2{ display:none; }
@@ -274,7 +278,7 @@ if( $_GET['action'] == "logout" ){?>
 					<td align="right">&nbsp;</td>
 					<td>
 						<div style="margin-left:10px">
-							<input type='button' value='Send OTP' class="input_div" onclick="sendotp(this)" style="cursor:pointer;width:initial;">
+							<input type='button' value='Send OTP' class="input_div" onclick="sendotp(this)" style="cursor:pointer;width:initial;color:black;">
 							<div id="otp_msg" style='color:blue;' ></div>
 							<div id="email_error_code" style="color:red; padding:5px;" ></div>
 						</div>
@@ -293,7 +297,7 @@ if( $_GET['action'] == "logout" ){?>
 					<td align="right">&nbsp;</td>
 					<td>
 						<div style="margin-left:10px">
-							<input type='button' value='Login' class="input_div" onclick="dologin()" style="cursor:pointer;width:50px">
+							<input type='button' value='Login' class="input_div" onclick="dologin()" style="cursor:pointer;width:50px;color:black;">
 						</div>
 						<div id="error_code" style="color:red; padding:10px;" ></div>
 					</td>
@@ -449,7 +453,7 @@ if( $_GET['action'] == "logout" ){?>
 				<table align="center" style="max-width:300px;" >
 					<tr>
 						<td><input type="number" name="school_code" id="school_code" class="input_div" style="width:200px;padding:5px;"  placeholder="Enter School UDISE Code" required autocomplete="off" ></td>
-						<td><input type="submit" value="LOGIN" class="input_div" style="width:80px;padding:5px;" ></td>
+						<td><input type="submit" value="LOGIN" class="input_div" style="width:80px;padding:5px;color:black;" ></td>
 					</tr>
 				</table>
 				<div id="school_code_div" align="center"></div>
@@ -509,14 +513,6 @@ if( $_GET['action'] == "logout" ){?>
 					<td align="right">Phone 2:</td>
 					<td><div style="margin-left:10px"><input type='number' class="input_div"  value="<?=($data['phone2']) ?>" name='phone2' id='pho2' style="width:200px" autocomplete="off"></div></td>
 				</tr>
-				<tr>
-					<td align="right">Count of teachers accompanied</td>
-					<td>
-						<div style="margin-left:10px">
-							<input type='number' name='total_teachers'  id='total_teachers_id' class="input_div" style='width:60px;' value="<?=$data['total_teachers']?>"  autocomplete="off">
-						</div>
-					</td>
-				</tr>
 			<?php if( $data1["district_code"]!=2814 ){ ?>
 				<tr  bgcolor='#ffef96' >
 					<td align="right">Need accommodation?:</td>
@@ -532,15 +528,16 @@ if( $_GET['action'] == "logout" ){?>
 			<input type='hidden' name='total_students'  id='total_students_id' value="<?=$data['total_students'] ?>" >
 	</div>	
 	<center>
-		<p style='color:white; font-weight:bold;'>Please check all the conditions and age groups before submitting.</p>
-		<p style='color:white; font-weight:bold;'>Last date for submission and corrections 22nd November 2023. Max 60 members are allowed from a school.</p>
+		<p style='color:white; font-weight:bold;'>Please check all the conditions and age groups before submitting</p>
+		<p style='color:white; font-weight:bold;'>Last date for submission and corrections is 18th November 2023</p>
+		<p style='color:white; font-weight:bold;'>Maximum 60 members are allowed from a school</p>
 	</center>
 	<table class="ddd satfixed" border=0 style="border-collapse:collapse;" width="100%" cellpadding='5' cellspacing='1'>
 		<thead class="sticky1">
 			<tr valign='middle' bgcolor='#3B5998' style='color:white;font-weight:bold;'>
 				<td class="col_"  align='center' width="40" rowspan="2" >ID</td>
 				<td class='hcol3' align='center' rowspan="2"  >Category</td>
-				<td colspan='3' align='center' >Persons/Groups</td>
+				<td colspan='3' align='center' >No of Students</td>
 				<td class='hcol6' align='center' rowspan="2" >Rules</td>
 			</tr>
 			<tr valign='middle' bgcolor='#3B5998' style='color:white;font-weight:bold;'>
@@ -568,23 +565,23 @@ if( $_GET['action'] == "logout" ){?>
 			<tr bgcolor='#ffef96'>
 				<td class="col_" align='right'><?=$value['sno'] ?></td>
 				<td class="col2" width='250'><?=$value['name'] ?></td>
-				<td class="col3" align='center' nowrap >
+				<td class="col3" align='right' nowrap >
 				<?php	if( $value["enabled"][0] && $config_school_types[ 'sub_jrs' ][ $data1['school_category'] ] ){ ?>
 
 						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][0];$k++){ ?>
-							<div><?=$value['enabled'][0]>1?"Group ". $k .": ":"Group: " ?> 
-						<select title="Select Number of Students in the Group" class="sel" name='stu[<?=$key?>][sub_jrs][<?=$k-1 ?>]' id='sub_jrs_<?=$key ?>_<?=$k-1 ?>' data-max='<?=$value['max'][0]?>' onchange="validate_this(this)" >
-							<option value='0'>-</option>";
-							<?php 
-							for($kk=$value['max'][0][0];$kk<=$value['max'][0][1];$kk++){
-								echo "<option ".($selection[$key]['sub_jrs'][$k-1]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
-							}
-							?>
-						</select>
+							<div><?="Group ". $k .": " ?> 
+							<select title="Select Number of Students in the Group" class="sel" name='stu[<?=$key?>][sub_jrs][<?=$k-1 ?>]' id='sub_jrs_<?=$key ?>_<?=$k-1 ?>' data-max='<?=$value['max'][0]?>' onchange="validate_this(this)"  >
+								<option value='0'>-</option>
+								<?php 
+								for($kk=$value['max'][0][0];$kk<=$value['max'][0][1];$kk++){
+									echo "<option ".($selection[$key]['sub_jrs'][$k-1]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
+								}
+								?>
+							</select>
 							</div>
 						<?php }}else{ ?>
 						<select class="sel" name='stu[<?=$key?>][sub_jrs][0]' id='sub_jrs_<?=$key ?>_0' data-max='<?=$value['max'][0]?>' onchange="validate_this(this)" >
-							<option value='0'>-</option>";
+							<option value='0'>-</option>
 							<?php 
 							for($kk=$value['max'][0][0];$kk<=$value['max'][0][1];$kk++){
 								echo "<option ".($selection[$key]['sub_jrs'][0]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
@@ -596,12 +593,12 @@ if( $_GET['action'] == "logout" ){?>
 						<div title="not available for <?=$data1['school_category'] ?> and in sub juniors">-</div>
 				<?php	} ?>
 				</td>
-				<td class="col4" align='center' nowrap >
+				<td class="col4" align='right' nowrap >
 				<?php	if( $value["enabled"][1] && $config_school_types[ 'jrs' ][ $data1['school_category'] ] ){   ?>
 						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][1];$k++){ ?>
-							<div><?=$value['enabled'][1]>1?"Group ". $k .": ":"Group: " ?> 
+							<div><?="Group ". $k .": " ?> 
 						<select title="Select Number of Students in the Group"  class="sel"  name='stu[<?=$key?>][jrs][<?=$k-1 ?>]' id='jrs_<?=$key ?>_<?=$k-1 ?>' data-max='<?=$value['max'][1]?>'  onchange="validate_this(this)">
-							<option value='0'>-</option>";
+							<option value='0'>-</option>
 							<?php 
 							for($kk=$value['max'][1][0];$kk<=$value['max'][1][1];$kk++){
 								echo "<option ".($selection[$key]['jrs'][$k-1]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
@@ -610,7 +607,7 @@ if( $_GET['action'] == "logout" ){?>
 						</select></div>
 						<?php }}else{ ?>
 						<select class="sel"  name='stu[<?=$key?>][jrs][0]' id='jrs_<?=$key ?>_0' data-max='<?=$value['max'][1]?>'  onchange="validate_this(this)">
-							<option value='0'>-</option>";
+							<option value='0'>-</option>
 							<?php 
 							for($kk=$value['max'][1][0];$kk<=$value['max'][1][1];$kk++){
 								echo "<option ".($selection[$key]['jrs'][0]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
@@ -618,16 +615,16 @@ if( $_GET['action'] == "logout" ){?>
 							?>
 						</select>
 						<?php } ?>					
-				<?php	}else{?>
+				<?php	}else{ ?>
 						<div title="not available for <?=$data1['school_category'] ?> and in juniors ">-</div>
 				<?php	}?>
 				</td>
-				<td class="col5" align='center' nowrap >
+				<td class="col5" align='right' nowrap >
 				<?php	if( $value["enabled"][2] && $config_school_types[ 'srs' ][ $data1['school_category'] ] ){   ?>
 						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][2];$k++){ ?>
-							<div><?=$value['enabled'][2]>1?"Group ". $k .": ":"Group: " ?> 
+							<div><?="Group ". $k .": " ?> 
 						<select title="Select Number of Students in the Group"  class="sel"  name='stu[<?=$key?>][srs][<?=$k-1 ?>]' id='srs_<?=$key ?>_<?=$k-1 ?>' data-max='<?=$value['max'][2]?>'  onchange="validate_this(this)">
-							<option value='0'>-</option>";
+							<option value='0'>-</option>
 							<?php 
 							for($kk=$value['max'][2][0];$kk<=$value['max'][2][1];$kk++){
 								echo "<option ".($selection[$key]['srs'][$k-1]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
@@ -636,7 +633,7 @@ if( $_GET['action'] == "logout" ){?>
 						</select></div>
 						<?php }}else{ ?>
 						<select class="sel"  name='stu[<?=$key?>][srs][0]' id='srs_<?=$key ?>_0' data-max='<?=$value['max'][2]?>'  onchange="validate_this(this)">
-							<option value='0'>-</option>";
+							<option value='0'>-</option>
 							<?php 
 							for($kk=$value['max'][2][0];$kk<=$value['max'][2][1];$kk++){
 								echo "<option ".($selection[$key]['srs'][0]==$kk?"selected":""). " value='".$kk."'>".$kk."</option>";
@@ -658,7 +655,7 @@ if( $_GET['action'] == "logout" ){?>
 		<div style="display:inline-block; font-size:18px; color:white; margin-right:50px;" >Total Students:  
 		<span style='font-weight:bold; font-size:18px; ' id="total_students_div" ><?=$data['total_students'] ?></span>
 		</div> 
-		<input type='submit' value='Save Details &amp; Confirm Participation' name='Register' id="register_btn" class="input_div" style=' padding:5px; cursor:pointer; margin:10px;width:300px !important; font-weight:bold;'>
+		<input type='submit' value='Save Details &amp; Confirm Participation' name='Register' id="register_btn" class="input_div" style=' padding:5px; cursor:pointer; margin:10px;width:300px !important; font-weight:bold;color:black;'>
 	</div>
 	<input type='hidden' name='action' value='register'>
 	<input type='hidden' name='school_id' value='<?=$module ?>'>

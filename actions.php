@@ -20,8 +20,8 @@ if( $_GET['action'] == "getcaptcha" ){
 	$white = imagecolorallocate($im, rand(110,255),rand(110,255),rand(110,255));
 
 	$sz = rand(20,24);
-	$angle = rand(-5,5);
-	$x = rand(0,20);
+	$angle = rand(0,0);
+	$x = rand(10,20);
 	$y = rand(20,30);
 	imagettftext($im, $sz, $angle, $x, $y, $white,  __DIR__."/arial.ttf", $cap);
 	$red = imagecolorallocate($im, rand(0,55),rand(0,85),rand(0,95));
@@ -775,7 +775,7 @@ function sendotp( $email, $otp ){
 
 		$subject = "Kriya OTP";
 
-		$st = send_mail_smtp_ses( $email, "", "ksatish21@gmail.com,jagannadhzp@gmail.com", $subject, $message );
+		$st = send_mail_smtp_ses( $email, "", "", $subject, $message );
 		if( $st['status'] == "fail" ){
 			error_reporting("Error in ses sendmail: " . $st['error'] );
 		}
@@ -802,9 +802,7 @@ function sendemail( $vid ){
 		$message .= "<p>Email: " . $row["email"] . "</p>";
 		$message .= "<p>Total Students Nominated: " . $row["total_students"] . "</p>";
 		$message .= "<p>&nbsp;</p>";
-		$message .= "<p>Note: Take enough time to analyze availability, skills, and interests of the students.</p>";
-		$message .= "<p>Properly plan participating groups and preparation with your students for the best outcome</p>";
-		$message .= "<p>You can pick/change nominations of your choice until Noveber 22nd 2023.</p>";
+		$message .= "<p>You can modify nominations of your choice until November 18th 2023.</p>";
 
 		ob_start();
 		?>		
@@ -878,7 +876,7 @@ function sendemail( $vid ){
 
 		$subject = "Kriya Participation Confirmation";
 
-		$st = send_mail_smtp_ses( $row['email'], "", "ksatish21@gmail.com,jagannadhzp@gmail.com", $subject, $message );
+		$st = send_mail_smtp_ses( $row['email'], "ksatish21@gmail.com,jagannadhzp@gmail.com", "", $subject, $message );
 		if( $st['status'] == "fail" ){
 			error_reporting("Error in ses sendmail: " . $st['error'] );
 		}
