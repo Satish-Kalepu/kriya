@@ -1,13 +1,13 @@
 <?php
 	session_start();
 
-	$login_enable = true;
-	if( $_SESSION['special2'] == "yes" ){
+	$login_enable = false;
+	if( $_SESSION['special3'] == "yes" ){
 		$login_enable = true;
 	}
         //$_SESSION['special2'] = "yes";  //   remove this to disable login.
-	if( $_GET['enable'] == "special" ){
-		$_SESSION['special2'] = "yes";
+	if( $_GET['enable'] == "special3" ){
+		$_SESSION['special3'] = "yes";
 		header("Location: /?special_login_enabled");
 		exit;
 	}
@@ -67,7 +67,7 @@
 
 	if( !is_numeric($module) ){
 		unset($module);
-	}	
+	}
 
 	if( $_SESSION['loggedin'] == "y" ){
 		$school_res = mysqli_query( $connection, "select * from kriya_schools where id =" . $_SESSION["user_id"]);
@@ -469,7 +469,7 @@ if( $_GET['action'] == "logout" ){?>
 	</form>
 	<center>
 	<p style='color:white; font-weight:bold;'>Please check all the conditions and age groups before submitting.</p>
-	<p style='color:white; font-weight:bold;'>Last date for submission and corrections 22nd November 2023. Max 60 members are allowed from a school.</p>
+	<p style='color:white; font-weight:bold; '>Last date for submission and corrections <span style="font-size:1.3rem;" >18th November</span> 2023. Max 60 members are allowed from a school.</p>
 	</center>
 	<div align="center">
 		<img src="/kriya-head2.jpg" style="max-width:100%;" >

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => '2023.x-dev',
+        'version' => '2023.9999999.9999999.9999999-dev',
+        'reference' => '2baabdd731ed774adc848ae38113cc2da240f345',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => '2023.x-dev',
+            'version' => '2023.9999999.9999999.9999999-dev',
+            'reference' => '2baabdd731ed774adc848ae38113cc2da240f345',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -101,9 +101,9 @@
             'dev_requirement' => false,
         ),
         'mpdf/mpdf' => array(
-            'pretty_version' => 'v8.2.0',
-            'version' => '8.2.0.0',
-            'reference' => '170a236a588d177c2aa7447ce490a030ca68e6f4',
+            'pretty_version' => 'v8.2.2',
+            'version' => '8.2.2.0',
+            'reference' => '596a87b876d7793be7be060a8ac13424de120dd5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mpdf/mpdf',
             'aliases' => array(),

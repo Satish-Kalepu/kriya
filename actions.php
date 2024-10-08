@@ -2,8 +2,8 @@
 
 	if( $_GET['action'] == "logout"){
 		session_destroy();
-		unset( $_SESSION['loggedin'] );
-		header("Location: /?");
+		session_regenerate_id();
+		header("Location: /?event=Logout");
 		exit;
 	}
 
@@ -467,6 +467,7 @@ if( $_POST['action'] == "login"){
 							setcookie( "email", $_POST['email'], time()+(186400) );
 							setcookie( "phone", $_POST['phone'], time()+(186400) );
 							setcookie( "vid", md5($_POST['phone']), time()+(186400) );
+							session_regenerate_id();
 							$_SESSION['loggedin'] = "y";
 							$_SESSION['user_id'] = $row['id'];
 							echo json_encode([
@@ -903,3 +904,141 @@ if( $_GET['action'] == "check_email"){
 	
 }
 
+
+if( $_GET['action'] == "searchdb" ){
+
+	$cond = "where 1 =1 ";
+	if( $_GET['keyword'] ){
+		if( is_numeric($_GET['keyword']) ){
+			$cond .= " and school_id like '%" . mysqli_escape_string( $connection, $_GET['keyword'] ) . "%' ";
+		}else{
+			$cond .= " and ( 
+			school_name 	like '%" . mysqli_escape_string( $connection, $_GET['keyword'] ) . "%' or
+			mandal_name 	like '%" . mysqli_escape_string( $connection, $_GET['keyword'] ) . "%' or
+			village_name 	like '%" . mysqli_escape_string( $connection, $_GET['keyword'] ) . "%' ) ";
+		}
+	}
+	$query = "select count(*) from kriya_school_list " . $cond . " ";
+	$res = mysqli_query( $connection, $query );
+	if( mysqli_error($connection) ){
+		echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );
+		exit;
+	}
+	$row = mysqli_fetch_array( $res );
+	$total = $row[0];
+	$start = ((int)$_GET['p']-1)*100;
+	$query = "select * from kriya_school_list " . $cond . " order by school_id limit ".$start.", 100";
+	$res = mysqli_query( $connection, $query );
+	if( mysqli_error($connection) ){
+		echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );
+		exit;
+	}
+	$records = [];
+	while( $row = mysqli_fetch_assoc( $res ) ){
+		$row['enc'] = md5(session_id() . $row['school_id'] );
+		$records[] = $row;
+	}
+	echo json_encode( ["status"=>"success", "total"=>$total, "records"=>$records, "query"=>$query] );
+	exit;
+	
+}
+
+//print_r( $_POST );exit;
+
+if( $_POST['action'] == "master_school_edit" ){
+
+	$edit = json_decode( $_POST['edit'], true );
+	if( !preg_match( "/^[0-9]{4,25}$/", $edit['school_id'] ) ){
+		echo json_encode( ["status"=>"error", "error"=>"School ID Incorrect" ] );exit;
+	}
+	if( $edit['enc'] != "new" ){
+		//echo md5(session_id(). $edit['school_id']);exit;
+		if( md5(session_id(). $edit['school_id']) != $edit['enc'] ){
+			echo json_encode( ["status"=>"error", "error"=>"Session Expired" ] );exit;
+		}
+	}
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-\_\&\@\(\)]{4,100}$/i", trim($edit['school_name']) ) ){
+		echo json_encode( ["status"=>"error", "error"=>"School Name Incorrect" ] );exit;
+	}
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-\_\&\@\(\)]{4,100}$/i", trim($edit['school_category']) ) && $edit['school_category'] != "-" ){
+		echo json_encode( ["status"=>"error", "error"=>"School Category Incorrect" ] );exit;
+	}
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['district_name']) ) && $edit['district_name'] != "" ){
+		echo json_encode( ["status"=>"error", "error"=>"District Incorrect" ] );exit;
+	}
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['mandal_name']) ) && $edit['mandal_name'] != "" ){
+		echo json_encode( ["status"=>"error", "error"=>"Mandal Incorrect" ] );exit;
+	}
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['village_name']) ) && $edit['village_name'] != "" ){
+		echo json_encode( ["status"=>"error", "error"=>"Village Incorrect" ] );exit;
+	}
+
+	if( $edit['enc'] == "new" ){
+
+		$query = "select * from kriya_school_list where school_id = '" . mysqli_escape_string( $connection, $edit['school_id'] ) . "' ";
+		$res = mysqli_query( $connection, $query );
+		if( mysqli_error($connection) ){
+			echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
+		}
+		$row = mysqli_fetch_assoc( $res );
+		if( $row ){
+			echo json_encode( ["status"=>"error", "error"=>"School already exists"] );exit;
+		}
+
+		$query = "insert into kriya_school_list set 
+		school_id = '" . mysqli_escape_string( $connection, $edit['school_id'] ) . "',
+		school_name 		= '" . mysqli_escape_string( $connection, $edit['school_name'] ) . "',
+		district_name 		= '" . mysqli_escape_string( $connection, $edit['district_name'] ) . "',
+		village_name 		= '" . mysqli_escape_string( $connection, $edit['village_name'] ) . "',
+		mandal_name 		= '" . mysqli_escape_string( $connection, $edit['mandal_name'] ) . "',
+		school_category 	= '" . mysqli_escape_string( $connection, $edit['school_category'] ) . "' ";
+		//echo $query;
+
+		mysqli_query( $connection, $query );
+		if( mysqli_error($connection) ){
+			echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
+		}
+
+	}else{
+
+		//print_r( $_POST );
+		$query = "update kriya_school_list set 
+		school_name 		= '" . mysqli_escape_string( $connection, $edit['school_name'] ) . "',
+		district_name 		= '" . mysqli_escape_string( $connection, $edit['district_name'] ) . "',
+		village_name 		= '" . mysqli_escape_string( $connection, $edit['village_name'] ) . "',
+		mandal_name 		= '" . mysqli_escape_string( $connection, $edit['mandal_name'] ) . "',
+		school_category 	= '" . mysqli_escape_string( $connection, $edit['school_category'] ) . "'
+		where school_id = '" . mysqli_escape_string( $connection, $edit['school_id'] ) . "' ";
+		//echo $query;exit;
+		mysqli_query( $connection, $query );
+		if( mysqli_error($connection) ){
+			echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
+		}
+
+		$query = "select * from kriya_schools where school_id = '" . mysqli_escape_string( $connection, $edit['school_id'] ) . "' ";
+		$res = mysqli_query( $connection, $query );
+		if( mysqli_error($connection) ){
+			echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
+		}
+		$row = mysqli_fetch_assoc( $res );
+		if( $row ){
+			$query = "update kriya_schools set 
+			school_name 		= '" . mysqli_escape_string( $connection, $edit['school_name'] ) . "',
+			district_name 		= '" . mysqli_escape_string( $connection, $edit['district_name'] ) . "',
+			village_name 		= '" . mysqli_escape_string( $connection, $edit['village_name'] ) . "',
+			mandal_name 		= '" . mysqli_escape_string( $connection, $edit['mandal_name'] ) . "',
+			school_category 	= '" . mysqli_escape_string( $connection, $edit['school_category'] ) . "'
+			where school_id = '" . mysqli_escape_string( $connection, $edit['school_id'] ) . "' ";
+			mysqli_query( $connection, $query );
+			if( mysqli_error($connection) ){
+				echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
+			}
+		}
+
+
+	}
+
+	echo json_encode( ["status"=>"success", "query"=>$query] );
+
+	exit;
+}

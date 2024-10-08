@@ -2,44 +2,19 @@
 
 $_SERVER['HTTP_HOST'] = "register.kriyaonline.org";
 
-error_reporting("E_ALL & ~E_NOTICE");
+//aerror_reporting(E_ALL & ~E_NOTICE);
 include('db.php');
 include('config.php');
 include("actions.php");
-include('mpdf60/mpdf.php');
+//include('mpdf60/mpdf.php');
+require("vendor/autoload.php");
 
-$day1 = "19 November 2022";
-$day2 = "20 November 2022";
+$day1 = "25 November 2022";
+$day2 = "26 November 2022";
 
 $s = ["sub_jrs" =>"Sub Junior", "jrs"=>"Junior", "srs"=>"Senior"];
 
-/*
-foreach( $config_categories as $i=>$j ){
-
-	//$s = utf8_decode($j['name']);
-	
-	
-	$dos = mb_convert_encoding($j['name'], "CP850", mb_detect_encoding($j['name'], "UTF-8, CP850, ISO-8859-15", true));
-	echo "<div>". $dos . "</div>"; 
-	$s = $j['name'];
-	echo "<div>". $s . "</div>";
-	echo  mb_detect_encoding($s, mb_detect_order(), true);
-	for($i=0;$i<strlen($s);$i++){
-		$k = $s[$i];
-		$u = "&#x".dechex(ord($k)).";";
-		echo "<div>" . $k . ": " . ord($k) . ": " . dechex(ord($k)) . " : " . $u . "</div>";
-		//echo 
-	}
-	
-	exit;
-
-}
-
-exit;
-*/
-
 //print_r( $argv );exit;
-
 
 if( 1 == 51 ){
 	$query = "select * from kriya_schools 
@@ -79,10 +54,9 @@ if( $day != "one" && $day != "two" ){
 		$school = mysqli_fetch_assoc($res2);
 		if( $school ){
 		
-		
-			if( file_exists('slips/Day_'. $day . '_School_'.$school['id'] .".pdf") ){
+			if( file_exists('slips/slips2023/Day_'. $day . '_School_'.str_pad($school['id'],3,"0",STR_PAD_LEFT) .".pdf") ){
 				echo $school['id'] ." already exists\n";
-				exit;
+				//exit;
 			}
 		
 			//print_r( $school );exit;
@@ -92,10 +66,9 @@ if( $day != "one" && $day != "two" ){
 			$query = "select * from kriya_options where school_id = " . $school['id'] . " order by item_id";
 			$res3 = mysqli_query( $connection, $query );
 			while( $row = mysqli_fetch_assoc($res3) ){
-				if( $day == "one" && $row['item_id'] <= 118 ){
+				if( $day == "one" && $row['item_id'] <= 117 ){
 					if( $row['item_id'] == 101 ){
 						unset($row['sub_jrs_cnt']);unset($row['sub_jrs']);
-						unset($row['jrs_cnt']);unset($row['jrs']);
 					}
 					$options2[ $row['item_id'] ] = $row;
 					if( $row['sub_jrs_cnt'] ){
@@ -120,6 +93,7 @@ if( $day != "one" && $day != "two" ){
 				if( $day == "two" && ( $row['item_id'] == 101 || $row['item_id'] >= 118 ) ){
 					if( $row['item_id'] == 101 ){
 						unset($row['srs_cnt']);unset($row['srs']);
+						unset($row['jrs_cnt']);unset($row['jrs']);
 					}
 					$options2[ $row['item_id'] ] = $row;
 					if( $row['sub_jrs_cnt'] ){
@@ -320,7 +294,7 @@ body, td,tr,th, p, div { font-size: 12px; font-family: Arial;}
 					}
 					$slipcnt++;
 					
-					if( $slipcnt == 4	&& $i!=39 ){
+					if( $slipcnt == 4 ){
 						$slipcnt=0;
 						//echo "<p>continues...</p>";
 						//echo "<pagebreak/>";
@@ -333,7 +307,8 @@ body, td,tr,th, p, div { font-size: 12px; font-family: Arial;}
 			$d = ob_get_clean();
 			if( 1==1 ){
 
-				$mpdf=new mPDF('C','A4');
+				//$mpdf=new mPDF('C','A4');
+				$mpdf = new \Mpdf\Mpdf(['mode'=>'C', 'format'=> 'A4']);
 				//['mode'=>'utf-8','format'=>'A4']
 				$mpdf->WriteHTML($d);
 				$mpdf->autoLangToFont = true;
@@ -344,7 +319,7 @@ body, td,tr,th, p, div { font-size: 12px; font-family: Arial;}
 				//$mpdf->autoArabic = true;
 				//$mpdf->SetDisplayMode('fullpage');
 
-				$mpdf->Output( 'slips/Day_'. $day . '_School_'.$school['id'] .".pdf", "F" );
+				$mpdf->Output( 'slips/slips2023/Day_'. $day . '_School_'.str_pad($school['id'],3,"0",STR_PAD_LEFT) .".pdf" , "F" );
 				//$mpdf->Output();
 				echo "" .$school['id'] . " Saved\n";
 				exit;			

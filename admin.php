@@ -40,9 +40,10 @@ Kriya Admin
 if(  $_SESSION['admin_login'] == 'yes' ){
 
 	echo "<div class='menu' >";
-	echo "<a href='?r=".time()."' >Schools</a>";
+	echo "<a href='?r=".time()."' >Registrations</a>";
 	echo "<a href='?view=report1&r=".time()."' >Summary</a>";
 	echo "<a href='?view=download&r=".time()."' >Report</a>";
+	echo "<a href='?view=database&r=".time()."' >School Database</a>";
 	//echo "<a href='?view=slips&r=".time()."' >Slips</a>";
 	echo "</div>";
 
@@ -585,6 +586,8 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 
 	}else if( $_GET['view'] == "slips" ){
 		//include("admin_slips.php");
+	}else if( $_GET['view'] == "database" ){
+		require("database.php");
 	}
 	echo "<BR><BR><BR><BR><BR><BR>";
 
