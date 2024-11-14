@@ -15,8 +15,3 @@ php_value display_errors On
 php_value html_errors Off
 php_value log_errors On
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-
-RewriteRule ^(.*)$   index.php?module=$1 [QSA,L]

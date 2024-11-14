@@ -1,14 +1,35 @@
-<?php
+<html>
+<body>
+<style>
+	@font-face{ 
+	font-family:Suravaram;
+	src:url(Suravaram.ttf) format("truetype");
+	}
+</style>
+<div style="font-family:Suravaram;" >
+	<?php
+		$s =  "మనబడి ఉపాధ్యక్షులు శరత్ వేట";
+		echo $s;
+		echo json_encode(["s"=>$s]);
 
+		$v = '{"s":"2వ అంతర్జాతీయ తెలుగు అంతర్జాల సదస్సు సందర్భంగా 2-11-2012 న\\n\\nవిశాఖపట్టణం లో విడుదల చేసిన ఏకరూప ఖతులు\\n\\nమీ సైట్లలో అందమైన తెలుగు ఖతులను ఉపయోగించుకోవడం ఎలా?\\n\\nఖతి  పేరు\\tనమూనా లంకెలు\\tదిగుమతికై లంకెలు\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\n\\n \\n\\n\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\n \\n\\nమనబడి ఉపాధ్యక్షులు శరత్ వేట, రత్న వేట గారు మే 25, 2019న\\n\\nమనబడి స్నాతకోత్సవ సందర్భంగా విడుదల చేసిన ఉచిత ఏకరూప ఖతులు(Free Unicode Fonts)\\n\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\n \\n\\nఖతి  పేరు\\tనమూనా లంకెలు\\tదిగుమతికై లంకెలు\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\n \\n\\n \\n\\nDownload Key Boards : Apple Keyboard\\n\\nInscript Keyboard\\n\\nఅంతర్జాతీయ మాతృభాషా దినోత్సవం 2012 సందర్భంగా ఆవిష్కరించిన\\nతెలుగు ఏకరూప ఖతులు (యూనికోడ్ ఫాంట్లు ) ఉచిత దిగుమతికై లంకెలు\\n\\nఖతి  పేరు\\tనమూనా లంకెలు\\tదిగుమతికై లంకెలు\\n\\tఖతి నమూనా\\tదిగుమతి కై (to Download)\\n\\n \\n\\n\\n\\tఖతి నమూనా\\n\\n \\n\\n\\tదిగుమతి కై (To Download)\\n\\tఖతి నమూనా\\n\\n \\n\\n\\tదిగుమతి కై (to Download)\\n\\n \\n\\n\\n\\n\\nపైన ఇవ్వబడిన తెలుగు ఖతులను మీ కంప్యూటర్లో నిక్షిప్తం చేసుకుని వాడుకోవాలంటే:\\n\\n \\t\\n\\n1 మొదటగా మీకు కావల్సిన ఖతిపై మౌస్ క్లిక్ చేసాక \\"Save this file to disk\\" అని వస్తుంది. మీ కంప్యూటర్లో కావల్సిన చోట నిక్షిప్తం చేసుకోండి.\\n2 మీ కంప్యూటర్లో \\"Start \\" బటన్ ద్వారా \\"Control Panel\\" లోకి వెళ్ళండి. అక్కడ ఫాంట్స్ అనే ఎంపిక మీద మౌస్ డబల్ క్లిక్ చేయండి.\\n3. విండోస్ మెనూలో ఫైల్ ఎంపిక చేసుకొని \\"ఇన్‌స్టాల్ న్యూ ఫాంట్\\" ఎంపిక చేసుకొని మొదట నిక్షిప్తం చేసుకున్న ఖతి ప్రదేశాన్ని ఎంచుకోగానే అక్కడ ఉన్న ఖతిని\\n\\"Add New Font\\" వద్ద ఎంచుకొని \\"ok\\" క్లిక్ చేయడం ద్వారా మీరు ఎంచుకున్న ఖతి మీ కంప్యూటర్లో నిక్షిప్తం అవుతుంది.\\nClick File option on window menu -> Install New Font -> Select the location of Font Installed and Point to Font Installed -> Click Ok\\n4 మీకు కావల్సిన అప్ప్లికేషన్‌లో మిగతా ఖతులతో పాటు నూతన ఖతి కూడా ఉంటుంది.\\n\\nలేదా\\n\\nమీ కంప్యూటర్లో నిక్షిప్తం అయిన ఖతిని Copy చేసుకొని Windows- డైరక్టరీ --> Fonts-> Paste ద్వారా కూడా మీరు డవున్లోడ్ చేసుకున్న ఖతి మీకు వాడకానికి అందుబాటులోకి వస్తుంది.\\n\\n \\n\\n\\t \\n \\t\\n\\nBack to www.SiliconAndhra.org\\n \\n\\n\\t \\n\\n        For More details contact\\n\\ninfo@siliconandhra.org\\n\\n                                         \\n\\n\\n\\n"}';
+
+		$k =  json_decode($v,true);
+		echo $k['s'];
+
+		// for($i=0;$i<strlen($s);$i++){
+		// 	echo $i . ": " . substr($s,$i,1) . ": " . ord( substr($s,$i,1) ) . "\n";
+		// }
+		// //print_r( $_SERVER );
+		?>
+	</pre>
+</div>
+
+<?php 
+exit;
 include("db.php");
 include("config.php");
 require("smtp_ses.php");
-
-echo "<pre>";
-print_r( $_SERVER );
-
-exit;
-
 if( 1==5 ){
 
 	$st = send_mail_smtp_ses( "ksatish21@gmail.com", "", "", "testing", "Testing" );

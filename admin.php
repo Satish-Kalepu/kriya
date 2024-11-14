@@ -120,10 +120,9 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			<thead>
 			<tr valign='middle' >
 			<td>Reg No</td>
+			<td>Type Of Reg</td>
 			<td>School Id</td>
-			<td>School Name</td>
-			<td>Village</td>
-			<td>District</td>
+			<td style="width: 350px;">School Name</td>
 			<td>Contact</td>
 			<td>Students</td>
 			<td>Teachers</td>
@@ -135,10 +134,9 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		<?php	foreach($records as $key =>$row){?>
 				<tr>
 				<td align='right'><?=$row['id']?></td>
+				<td><?=$row['type']?></td>
 				<td align='right'><?=$row['school_id']?></td>
-				<td><?=$row['school_name']?></td>
-				<td><?=$row['village_name']?></td>
-				<td><?=$row['district_name']?></td>
+				<td style="word-wrap: break-word;"><?=$row['school_name']?>,<?=$row['village_name']?>,<?=$row['district_name']?></td>
 				<td>
 					<?=$row['contact_person']."<BR>". $row['phone'] . ($row['phone2']?",".$row['phone2']:"") .  ($row['email']?"<BR>".$row['email']:"")?>
 				</td>
@@ -240,7 +238,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		$res = mysqli_query($connection,$query);
 		$school = mysqli_fetch_assoc($res);  //print_r($school);
 		$options = array();
-		$query = "select * from kriya_options where school_id = '" . $_GET['school_id'] . "' ";
+		$query = "select * from kriya_options where user_id = '" . $_GET['school_id'] . "' ";
 		$res = mysqli_query($connection,$query);
 		while( $row = mysqli_fetch_assoc( $res )){
 			$options[ $row['item_id'] ] = $row;
@@ -263,6 +261,10 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 					<tr>
 						<td>Reg No</td>
 						<td><?=$school['id']?></td>
+					</tr>
+					<tr>
+						<td>Reg Type</td>
+						<td><?=$school['type']?></td>
 					</tr>
 					<tr>
 						<td>School Code</td>
@@ -379,19 +381,19 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			$counts[ $key ] = array();
 		}
 
-		$query = "select item_id, sum(sub_jrs) as groups, sum(sub_jrs_cnt) as cnt, count(school_id) as school_cnt from kriya_options where sub_jrs > 0 group by item_id";
+		$query = "select item_id, sum(sub_jrs) as groups, sum(sub_jrs_cnt) as cnt, count(user_id) as school_cnt from kriya_options where sub_jrs > 0 group by item_id";
 		$res2 = mysqli_query( $connection, $query );
 		while( $row = mysqli_fetch_assoc($res2) ){
 			$counts[ $row['item_id'] ][ "sub_jrs" ] = array( "groups"=>$row['groups'], "students"=>$row['cnt'], "schools"=> $row['school_cnt'] );
 		}
 
-		$query = "select item_id, sum(jrs) as groups, sum(jrs_cnt) as cnt, count(school_id) as school_cnt from kriya_options where jrs > 0 group by item_id";
+		$query = "select item_id, sum(jrs) as groups, sum(jrs_cnt) as cnt, count(user_id) as school_cnt from kriya_options where jrs > 0 group by item_id";
 		$res2 = mysqli_query( $connection, $query );
 		while( $row = mysqli_fetch_assoc($res2) ){
 			$counts[ $row['item_id'] ][ "jrs" ] = array( "groups"=>$row['groups'], "students"=>$row['cnt'], "schools"=> $row['school_cnt'] );
 		}
 
-		$query = "select item_id, sum(srs) as groups, sum(srs_cnt) as cnt, count(school_id) as school_cnt from kriya_options where srs > 0 group by item_id";
+		$query = "select item_id, sum(srs) as groups, sum(srs_cnt) as cnt, count(user_id) as school_cnt from kriya_options where srs > 0 group by item_id";
 		$res2 = mysqli_query( $connection, $query );
 		while( $row = mysqli_fetch_assoc($res2) ){
 			$counts[ $row['item_id'] ][ "srs" ] = array( "groups"=>$row['groups'], "students"=>$row['cnt'], "schools"=> $row['school_cnt'] );
@@ -473,12 +475,12 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		b.phone, 
 		b.phone2
 		from ( 
-			select * from kriya_options where `item_id` = " . $_GET['item_id'] . " and `" . $_GET['t'] . "` > 0 order by school_id
+			select * from kriya_options where `item_id` = " . $_GET['item_id'] . " and `" . $_GET['t'] . "` > 0 order by user_id
 		) as a 
-		left join kriya_schools as b on ( a.school_id = b.id ) order by b.id";     
+		left join kriya_schools as b on ( a.user_id = b.id ) order by b.id";     
 		//echo $query;   
 		//select * from kriya_options where `item_id` = 4 and `srs` > 0;          
-		$q1 = "select * from kriya_options where `item_id` = " . $_GET['item_id'] . " and `" . $_GET['t'] . "` > 0 order by school_id";
+		$q1 = "select * from kriya_options where `item_id` = " . $_GET['item_id'] . " and `" . $_GET['t'] . "` > 0 order by user_id";
 		$res = mysqli_query( $connection, $query );
 		if(mysqli_error($connection)){
 			echo $q1;

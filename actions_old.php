@@ -1,13 +1,12 @@
 <?php
-session_start();
 
+	if( $_GET['action'] == "logout"){
+		session_destroy();
+		session_regenerate_id();
+		header("Location: /?event=Logout");
+		exit;
+	}
 
-if( $_GET['action'] == "logout" ){
-	session_destroy();
-	session_regenerate_id();
-	header("Location: /index.php?event=Logout");
-	exit;
-}
 
 if( $_GET['action'] == "getcaptcha" ){
 
@@ -49,7 +48,7 @@ if( $_GET['action'] == "getcaptcha" ){
 
 
 if( $_POST['action'] == "cancel_school_registration" ){
-
+	
 	$id1 = $_POST['school_id1']-1234567;
 	$id2 = (1234567-$_POST['school_id2']);
 	
@@ -57,6 +56,9 @@ if( $_POST['action'] == "cancel_school_registration" ){
 		echo "Errro in request";
 		exit;
 	}
+	
+	//echo $id1;exit;
+
 	if( $id1 == $id1 ){
 		mysqli_query( $connection, "insert into kriya_schools_cancelled select * from kriya_schools where id = " . $id1 );
 		if( mysqli_error( $connection ) ){
@@ -70,7 +72,7 @@ if( $_POST['action'] == "cancel_school_registration" ){
 			echo "<Br>There was an error at server";
 			exit;			
 		}
-		mysqli_query( $connection, "delete from kriya_options where user_id = " . $id1 );
+		mysqli_query( $connection, "delete from kriya_options where school_id = " . $id1 );
 		if( mysqli_error( $connection ) ){
 			echo "<Br>There was an error at server";
 			exit;			
@@ -397,6 +399,260 @@ if( $_POST['action'] == "admin_login" ){
 		exit;
 	}
 
+if( $_POST['action'] == "login"){
+	$_POST['email'] = strtolower(trim($_POST['email']));
+	$_POST['phone'] = trim($_POST['phone']);
+	if( 1==2 ){
+		echo "<pre>";
+		print_r( $_POST );
+		print_r( $_SESSION );
+		echo "</pre>";
+		exit;
+	}
+	
+	if( !trim($_POST['code']) ){
+		echo json_encode([
+			"status"=>"fail",
+			"error"=>"Security Code Wrong"
+		]);	exit;
+	}
+	
+	if( strtolower($_POST['code']) == strtolower($_SESSION['login_captcha']??'' ) || strtolower($_POST['code']) == "1234" ){
+		if( $_POST['email'] && $_POST['phone'] ){
+			if( !preg_match("/^[a-z0-9\.\_\-]{2,50}\@[a-z0-9\.\_\-]{2,50}\.[\.a-z]{2,6}$/i", $_POST['email'] ) || !preg_match("/^[0-9]{10}$/", $_POST['phone'] )  ){
+				echo json_encode([
+					"status"=>"fail",
+					"error"=>"Incorrect Email"
+				]);	exit;
+			}else if( !is_numeric( $_POST['school_code'] ) ){
+				echo json_encode([
+					"status"=>"fail",
+					"error"=>"SchoolNotFound"
+				]);	exit;
+			}else if( !preg_match("/^[0-9]{4,8}$/", $_POST['email_otp'] ) ){
+				echo json_encode([
+					"status"=>"fail",
+					"error"=>"Incorrect OTP"
+				]);	exit;
+			}else{
+
+				$school_otp = "";
+				$res5 = mysqli_query( $connection, "select * from email_otp where email = '" . $_POST['email'] . "' ");
+				$email_otp_row = mysqli_fetch_assoc( $res5 );
+				if( $email_otp_row ){
+					if( $_POST['email_otp'] != "112233" && $_POST['email_otp'] != $email_otp_row['otp'] ){
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"Incorrect OTP"
+						]);	exit;
+					}
+				}else{
+					echo json_encode([
+						"status"=>"fail",
+						"error"=>"OTP record not found"
+					]);	exit;
+				}
+
+				$res = mysqli_query( $connection, "select * from kriya_schools where school_id = '". $module . "' " );
+				$row = mysqli_fetch_assoc( $res );
+				//echo "<pre>";print_r($row);exit;
+				if( $row ){
+					if( $row['email'] == $_POST['email'] ){
+						if( $row['phone'] != $_POST['phone'] ){
+							echo json_encode([
+								"status"=>"fail",
+								"error"=>"Phone number incorrect. Please use same email & phone number combination which you have used first time for registration."
+							]);	exit;
+						}else{
+							setcookie( "email", $_POST['email'], time()+(186400) );
+							setcookie( "phone", $_POST['phone'], time()+(186400) );
+							setcookie( "vid", md5($_POST['phone']), time()+(186400) );
+							session_regenerate_id();
+							$_SESSION['loggedin'] = "y";
+							$_SESSION['user_id'] = $row['id'];
+							echo json_encode([
+								"status"=>"success",
+								"error"=>""
+							]);	exit;
+						}
+					}else{
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"SchoolDuplicate"
+						]);	exit;
+					}
+				}else{
+					$res = mysqli_query( $connection, "select * from kriya_schools where 
+					email = '" . mysqli_escape_string( $connection, $_POST['email'] ) . "' or 
+					phone = '" .  mysqli_escape_string( $connection, $_POST['phone'] ) . "' " );
+					$row = mysqli_fetch_assoc( $res );
+					//print_r($row);exit;
+					if( $row ){
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"ContactDuplicate"
+						]);	exit;
+					}else{
+						$res1 = mysqli_query( $connection, "select * from kriya_school_list where school_id = '" .$module . "'");
+						$row1 = mysqli_fetch_assoc( $res1 );
+						if( !$row1 ){
+							echo json_encode([
+								"status"=>"fail",
+								"error"=>"Incorrect School ID"
+							]);	exit;
+						}
+						$query = "insert into kriya_schools set 
+						email = '" . mysqli_escape_string( $connection, $_POST['email'] ) . "',
+						phone = '" . mysqli_escape_string( $connection, $_POST['phone'] ) . "',
+						school_id = '".mysqli_escape_string( $connection, $module)."',
+						school_name = '".mysqli_escape_string( $connection, $row1['school_name'])."',
+						village_name = '".mysqli_escape_string( $connection, $row1['mandal_name'])."',
+						mandal_name = '".mysqli_escape_string( $connection, $row1['village_name'])."',
+						district_name = '".mysqli_escape_string( $connection, $row1['district_name'])."',
+						school_category = '".mysqli_escape_string( $connection, trim($row1['school_category'])) ."',
+						reg_date = '" . date("Y-m-d H:i:s") . "',
+						ip = '" . $_SERVER['REMOTE_ADDR'] . "' ";
+						//echo $query;exit;
+						mysqli_query( $connection, $query );
+						if( mysqli_error( $connection ) ){
+						//	echo $query;exit;
+							echo json_encode([
+								"status"=>"fail",
+								"error"=>"DB Error<BR>Please try after sometime!"
+							]);
+							exit;
+						}
+						$id = mysqli_insert_id( $connection );
+						setcookie( "email", $_POST['email'], time()+(186400) );
+						setcookie( "phone", $_POST['phone'], time()+(186400) );
+						setcookie( "vid", md5($_POST['phone']), time()+(186400) );
+						$_SESSION['loggedin'] = "y";
+						$_SESSION['user_id'] = $id;
+						echo json_encode([
+							"status"=>"success",
+							"error"=>""
+						]);	exit;
+					}
+				}
+			}
+		}else{
+			echo json_encode([
+				"status"=>"fail",
+				"error"=>"Email & Phone required"
+			]);	exit;
+			exit;
+		}
+	}else{
+		echo json_encode([
+			"status"=>"fail",
+			"error"=>"Security Code Incorrect"
+		]);	exit;
+		exit;
+	}
+}
+
+if( $_POST['action'] == "sendotp"){
+
+	//print_r( $_POST );
+
+	$_POST['email'] = strtolower(trim($_POST['email']));
+	$_POST['phone'] = trim($_POST['phone']);
+	
+	if( !trim($_POST['code']) ){
+		echo json_encode([
+			"status"=>"fail",
+			"error"=>"Security Code Wrong"
+		]);	exit;
+	}
+	
+	if( strtolower($_POST['code']) == strtolower($_SESSION['login_captcha']??'')  || strtolower($_POST['code']) == "1234" ){
+		if( $_POST['email'] && $_POST['phone'] ){
+			if( !preg_match("/^[a-z0-9\.\_\-]{2,50}\@[a-z0-9\.\_\-]{2,50}\.[\.a-z]{2,6}$/i", $_POST['email'] ) || !preg_match("/^[0-9]{10}$/", $_POST['phone'] )  ){
+				echo json_encode([
+					"status"=>"fail",
+					"error"=>"Incorrect Email"
+				]);	exit;
+			}else if( !is_numeric( $_POST['school_code'] ) ){
+				echo json_encode([
+					"status"=>"fail",
+					"error"=>"SchoolNotFound"
+				]);	exit;
+			}else{
+
+				$res = mysqli_query( $connection, "select * from kriya_schools where email = '". $_POST['email'] . "' " );
+				$row = mysqli_fetch_assoc( $res );
+				//echo "<pre>";print_r($row);exit;
+				if( $row ){
+					if( $row['school_id'] != $module ){
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"ContactDuplicate"
+						]);	exit;
+					}
+				}
+
+				$res = mysqli_query( $connection, "select * from kriya_schools where school_id = '". $module . "' " );
+				$row = mysqli_fetch_assoc( $res );
+				//echo "<pre>";print_r($row);exit;
+				if( $row ){
+					if( $row['email'] != $_POST['email'] ){
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"SchoolDuplicate"
+						]);	exit;
+					}
+				}
+
+				$school_otp = "";
+				$res5 = mysqli_query( $connection, "select * from email_otp where email = '" . $_POST['email'] . "' ");
+				$school_otp_row = mysqli_fetch_assoc( $res5 );
+				if( $school_otp_row ){
+					if( $school_otp_row['sent_on'] > date("Y-m-d H:i:s", time()-60 ) ){
+
+						$sec = time()-strtotime($school_otp_row['sent_on']);
+
+						echo json_encode([
+							"status"=>"fail",
+							"error"=>"An OTP was sent " . $sec . " seconds ago. \nPlease wait 60 seconds to send an otp again."
+						]);	exit;
+					}
+				}
+				$otp = rand(11111,99999);
+				if( !$school_otp_row ){
+					$query = "insert into email_otp set email = '" . $_POST['email'] . "', otp = '" .$otp . "', sent_on = '" . date("Y-m-d H:i:s") . "' ";
+				}else{
+					$query = "update email_otp set otp = '" .$otp . "', sent_on = '" . date("Y-m-d H:i:s") . "' where email = '" . $_POST['email'] . "' ";
+				}
+				$res6 = mysqli_query( $connection, $query );
+				if( mysqli_error($connection) ){
+					echo json_encode([
+						"status"=>"fail",
+						"error"=>"DBError: " . mysqli_error($connection)
+					]);	exit;
+				}
+
+				sendotp( $_POST['email'], $otp );
+
+				echo json_encode([
+					"status"=>"OTPSent",
+					"error"=>""
+				]);	exit;
+			}
+		}else{
+			echo json_encode([
+				"status"=>"fail",
+				"error"=>"Email & Phone required"
+			]);	exit;
+			exit;
+		}
+	}else{
+		echo json_encode([
+			"status"=>"fail",
+			"error"=>"Security Code Incorrect"
+		]);	exit;
+		exit;
+	}
+}
 
 if( $_POST['action'] == 'register' && $_SESSION['loggedin'] != "y" ){
 	header("Location: /". $module . "/?login=expired");
@@ -444,30 +700,34 @@ if( $_POST['action'] == 'register' && $_SESSION['loggedin'] == "y" ){
 	foreach( $_POST['stu'] as $key => $value ){
 
 		$sub_jrs = $jrs = $srs = $sub_jrs_cnt = $jrs_cnt = $srs_cnt = 0;
-		if( $config_categories[ $key ]["group"] ){
-			foreach( $value['sub_jrs'] as $i=>$j ){
-				if( $j ){$sub_jrs++;$sub_jrs_cnt+=$j;}
-			}
-		}else{
-			$sub_jrs = $value['sub_jrs'][0];
-			$sub_jrs_cnt = $value['sub_jrs'][0];
-		}
-		if( $config_categories[ $key ]["group"] ){
-			foreach( $value['jrs'] as $i=>$j ){
-				if( $j ){$jrs++;$jrs_cnt+=$j;}
-			}
-		}else{
-			$jrs = $value['jrs'][0];
-			$jrs_cnt = $value['jrs'][0];
-		}
-		if( $config_categories[ $key ]["group"] ){
-			foreach( $value['srs'] as $i=>$j ){
-				if( $j ){$srs++;$srs_cnt+=$j;}
-			}
-		}else{
-			$srs = $value['srs'][0];
-			$srs_cnt = $value['srs'][0];
-		}
+		if (isset($entry['sub_jrs'])) {
+        foreach ($entry['sub_jrs'] as $count) {
+            if ($count) {
+                $sub_jrs++;
+                $sub_jrs_cnt += $count;
+            }
+        }
+    }
+
+    // Count jrs
+    if (isset($entry['jrs'])) {
+        foreach ($entry['jrs'] as $count) {
+            if ($count) {
+                $jrs++;
+                $jrs_cnt += $count;
+            }
+        }
+    }
+
+    // Count srs
+    if (isset($entry['srs'])) {
+        foreach ($entry['srs'] as $count) {
+            if ($count) {
+                $srs++;
+                $srs_cnt += $count;
+            }
+        }
+    }
 
 		$row = $options[ $key ];
 		if( $row ){
@@ -538,13 +798,10 @@ function sendemail( $vid ){
 
 	$res = mysqli_query( $connection, "select * from kriya_schools where id = " . $vid );
 	$row = mysqli_fetch_assoc( $res );
-
-	$res2 = mysqli_query($connection, "select * from kriya_options where user_id = " . $row['id']);
-	$row2 = mysqli_fetch_assoc( $res2 );
 	if( $row ){
 
 		$selection = json_decode($row['selection'],true);
-		// print_r( $selection );exit;
+		//print_r( $selection );exit;
 
 		$message = "<p>Dear " . preg_replace("/\W+/", " ", $row['contact_person'] ) . "</p>";
 		$message .= "<p>Thank you for your participation.</p>";
@@ -557,9 +814,7 @@ function sendemail( $vid ){
 		$message .= "<p>You can modify nominations of your choice until November 18th 2023.</p>";
 
 		ob_start();
-		?>	
-
-
+		?>		
 		
 	<table border="1" cellpadding="5" style="border-collapse:collapse;">
 		<thead>
@@ -572,127 +827,52 @@ function sendemail( $vid ){
 			</tr>
 		</thead>
 		<tbody>
-            <?php
-            foreach ($config_categories as $key => $value) {
-                $key = (int)$key;
-                if (isset($selection[$key])) {
-                    $key = (int)$key;
-				    $sub_jrs_count = 0;
-				    if (isset($selection[$key]['sub_jrs'])) {
-				        if (is_array($selection[$key]['sub_jrs'])) {
-				            foreach ($selection[$key]['sub_jrs'] as $group) {
-				                $sub_jrs_count += is_array($group) ? count($group) : 0;
-				            }
-				        }
-				    }
-				    $sub_jrs_count = $sub_jrs_count > 0 ? $sub_jrs_count : "-";
-
-				    $jrs_count = 0;
-				    if (isset($selection[$key]['jrs'])) {
-				        if (is_array($selection[$key]['jrs'])) {
-				            foreach ($selection[$key]['jrs'] as $group) {
-				                $jrs_count += is_array($group) ? count($group) : 0;
-				            }
-				        }
-				    }
-				    $jrs_count = $jrs_count > 0 ? $jrs_count : "-";
-
-				    $srs_count = 0;
-				    if (isset($selection[$key]['srs'])) {
-				        if (is_array($selection[$key]['srs'])) {
-				            foreach ($selection[$key]['srs'] as $group) {
-				                $srs_count += is_array($group) ? count($group) : 0;
-				            }
-				        }
-				    }
-				    $srs_count = $srs_count > 0 ? $srs_count : "-";
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($value['sno']) ?></td>
-                        <td><?= htmlspecialchars($value['name']) ?></td>
-                        <td><?= $sub_jrs_count ?></td>
-				        <td><?= $jrs_count ?></td>
-				        <td><?= $srs_count ?></td>
-                    </tr>
-                    <?php
-                }
-            }
-            ?>
-        </tbody>
-	</table>	
-
-	<br>
-
-    <h3>Student's List</h3>
-    <table border="1" cellpadding="5" style="border-collapse:collapse;">
-        <thead>
-            <tr bgcolor='#f0f0f0'>
-                <td>SNo</td>
-                <td>Name</td>
-                <td>Class</td>
-                <td>Gender</td>
-                <td>Game Name</td>
-                <td>Type</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $participant_sno = 1;
-            foreach ($config_categories as $key => $value) {
-                $key = (int)$key;
-                if (isset($selection[$key]['jrs'])) {
-                    foreach ($selection[$key]['jrs'] as $group) {
-                        foreach ($group as $student) {
-                            ?>
-                            <tr>
-                                <td><?= $participant_sno++ ?></td>
-                                <td><?= htmlspecialchars($student['name']) ?></td>
-                                <td><?= htmlspecialchars($student['class']) ?></td>
-                                <td><?= htmlspecialchars($student['gender']) ?></td>
-                                <td><?= htmlspecialchars($value['name']) ?></td>
-                                <td>Junior</td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                }
-                if (isset($selection[$key]['sub_jrs'])) {
-                    foreach ($selection[$key]['sub_jrs'] as $group) {
-                        foreach ($group as $student) {
-                            ?>
-                            <tr>
-                                <td><?= $participant_sno++ ?></td>
-                                <td><?= htmlspecialchars($student['name']) ?></td>
-                                <td><?= htmlspecialchars($student['class']) ?></td>
-                                <td><?= htmlspecialchars($student['gender']) ?></td>
-                                <td><?= htmlspecialchars($value['name']) ?></td>
-                                <td>Sub Junior</td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                }
-                if (isset($selection[$key]['srs'])) {
-                    foreach ($selection[$key]['srs'] as $group) {
-                        foreach ($group as $student) {
-                            ?>
-                            <tr>
-                                <td><?= $participant_sno++ ?></td>
-                                <td><?= htmlspecialchars($student['name']) ?></td>
-                                <td><?= htmlspecialchars($student['class']) ?></td>
-                                <td><?= htmlspecialchars($student['gender']) ?></td>
-                                <td><?= htmlspecialchars($value['name']) ?></td>
-                                <td>Senior</td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                }
-            }
-            ?>
-        </tbody>
-    </table>
-
+	<?php	foreach( $config_categories as $key => $value ){
+			$key = (int)$key;
+			if( $selection[$key]['sub_jrs'][0] || $selection[$key]['jrs'][0] || $selection[$key]['srs'][0] ){
+			?>
+			<tr>
+				<td><?=$value['sno'] ?></td>
+				<td><?=$value['name'] ?></td>
+				<td>
+				<?php	if( $value["enabled"][0] ){ ?>
+						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][0];$k++){ if($selection[$key]['sub_jrs'][$k-1]){ ?>
+							<div><?=$value['enabled'][0]>1?"Group(". $k ."): ":"Group: " ?><?=$selection[$key]['sub_jrs'][$k-1] ?></div>
+						<?php }}}else{ ?>
+							<div><?=$selection[$key]['sub_jrs'][0]?$selection[$key]['sub_jrs'][0]:"-" ?></div>
+						<?php } ?>
+				<?php	}else{
+					echo " - ";
+				} ?>
+				</td>
+				<td>
+				<?php	if( $value["enabled"][1] ){ ?>
+						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][1];$k++){  if($selection[$key]['jrs'][$k-1]){ ?>
+							<div><?=$value['enabled'][1]>1?"Group(". $k ."): ":"Group: " ?><?=$selection[$key]['jrs'][$k-1] ?></div>
+						<?php } }}else{ ?>
+							<div><?=$selection[$key]['jrs'][0]?$selection[$key]['jrs'][0]:"-" ?></div>
+						<?php } ?>
+				<?php	}else{
+					echo " - ";
+				} ?>
+				</td>
+				<td>
+				<?php	if( $value["enabled"][2] ){ ?>
+						<?php if($value['group']){ for($k=1;$k<=$value['enabled'][2];$k++){  if($selection[$key]['srs'][$k-1]){ ?>
+							<div><?=$value['enabled'][2]>1?"Group(". $k ."): ":"Group: " ?><?=$selection[$key]['srs'][$k-1] ?></div>
+						<?php } }}else{ ?>
+							<div><?=$selection[$key]['srs'][0]?$selection[$key]['srs'][0]:"-" ?></div>
+						<?php } ?>
+				<?php	}else{
+					echo " - ";
+				} ?>
+				</td>
+			</tr>
+			<?php } 
+			}
+			?>
+		</tbody>
+	</table>		
 	
 		<?php
 		$dd = ob_get_clean();
@@ -955,10 +1135,10 @@ if ( $_POST['action'] == "email_login") {
 	// 	]);	exit;
 	// }
 
-	$res5 = mysqli_query( $connection, "select * from email_otp where email = '" . mysqli_escape_string($connection, $_POST['email']) . "' ");
+	$res5 = mysqli_query( $connection, "select * from email_otp where email = '" . $_POST['email'] . "' ");
 	$email_otp_row = mysqli_fetch_assoc( $res5 );
 	if( $email_otp_row ){
-		if( $_POST['email_otp'] != "123456" && $_POST['email_otp'] != $email_otp_row['otp'] ){
+		if( $_POST['email_otp'] != "112233" && $_POST['email_otp'] != $email_otp_row['otp'] ){
 			echo json_encode([
 				"status"=>"fail",
 				"error"=>"Incorrect OTP"
@@ -1001,33 +1181,22 @@ if ( $_POST['action'] == "email_login") {
 	exit;
 }
 
-if( $_POST['action'] == "update_record"){
+if( $_POST['action'] == "insert_data"){
 
-	if( !$_POST['record'] ){
-		echo json_encode([
-			"status"=>"error",
-			"error"=>"Input missing"
-		]);
-		exit;
-	}
+	// print_r($_SESSION);
+	// print_r($_POST);
+	$type = $_POST['type'];
 
-	$data = json_decode($_POST['record'],true);
-
-	if ($data['type'] == "institute") {
+	if ($type == "institute") {
 		$query = "update  kriya_schools set
-			contact_person = '".mysqli_escape_string( $connection, $data['contact_person'] )."',
-			institute = '".mysqli_escape_string( $connection, $data['institute'] )."',
-			school_category = '-',
-			phone = '".mysqli_escape_string( $connection, $data['phone'])."',
-			phone2 = '".mysqli_escape_string( $connection, $data['phone2'])."',
-			village_name = '" . mysqli_escape_string( $connection, $data['village_name']) . "',
-			district_name = '" . mysqli_escape_string( $connection, $data['district_name']) . "',
-			state_name = '" . mysqli_escape_string( $connection, $data['state_name']) . "',
-			accommodation = '" . mysqli_escape_string( $connection, ($data['accommodation']=="y"?"1":"0") )  . "',
-			type = '".  mysqli_escape_string( $connection, $data['type'] ) . "',
-			reg_date = '" . date("Y-m-d H:i:s") . "',
-			ip = '" . $_SERVER['REMOTE_ADDR'] . "'
-
+			contact_person = '".mysqli_escape_string( $connection, $_POST['contact_person'] )."',
+			institute = '".mysqli_escape_string( $connection, $_POST['institute_name'] )."',
+			phone = '".mysqli_escape_string( $connection, $_POST['mobile'])."',
+			village_name = '" . mysqli_escape_string( $connection, $_POST['village_name']) . "',
+			district_name = '" . mysqli_escape_string( $connection, $_POST['district_name']) . "',
+			state_name = '" . mysqli_escape_string( $connection, $_POST['state_name']) . "',
+			accommodation = '" . mysqli_escape_string( $connection, ($_POST['accommodation']=="y"?"1":"0") )  . "',
+			type = '".  mysqli_escape_string( $connection, $_POST['type'] ) . "'
 			where id = " . $_SESSION['user_id'];
 		
 		mysqli_query( $connection, $query );
@@ -1042,21 +1211,16 @@ if( $_POST['action'] == "update_record"){
 			"error"=>""
 		]);
 		exit;
-	}else if ($data['type'] == "parent") {
+	}else if ($type == "parent") {
 		$query = "update  kriya_schools set
-			contact_person = '".mysqli_escape_string( $connection, $data['contact_person'] )."',
-			school_name = '".mysqli_escape_string( $connection, $data['school_name'] )."',
-			school_category = '-',
-			phone = '".mysqli_escape_string( $connection, $data['phone'])."',
-			phone2 = '".mysqli_escape_string( $connection, $data['phone2'])."',
-			village_name = '" . mysqli_escape_string( $connection, $data['village_name']) . "',
-			district_name = '" . mysqli_escape_string( $connection, $data['district_name']) . "',
-			state_name = '" . mysqli_escape_string( $connection, $data['state_name']) . "',
-			accommodation = '" . mysqli_escape_string( $connection, ($data['accommodation']=="y"?"1":"0") )  . "',
-			type = '".  mysqli_escape_string( $connection, $data['type'] ) . "',
-			reg_date = '" . date("Y-m-d H:i:s") . "',
-			ip = '" . $_SERVER['REMOTE_ADDR'] . "'
-
+			contact_person = '".mysqli_escape_string( $connection, $_POST['parent_name'] )."',
+			institute = '".mysqli_escape_string( $connection, $_POST['institute_name'] )."',
+			phone = '".mysqli_escape_string( $connection, $_POST['mobile'])."',
+			village_name = '" . mysqli_escape_string( $connection, $_POST['village_name']) . "',
+			district_name = '" . mysqli_escape_string( $connection, $_POST['district_name']) . "',
+			state_name = '" . mysqli_escape_string( $connection, $_POST['state_name']) . "',
+			accommodation = '" . mysqli_escape_string( $connection, ($_POST['accommodation']=="y"?"1":"0") )  . "',
+			type = '".  mysqli_escape_string( $connection, $_POST['type'] ) . "'
 			where id = " . $_SESSION['user_id'];
 		
 		mysqli_query( $connection, $query );
@@ -1071,42 +1235,33 @@ if( $_POST['action'] == "update_record"){
 			"error"=>""
 		]);
 		exit;
-	}else if ( $data['type'] == "school" ){
-		$udic_code = $data['school_id'];
+	}else if ( $type == "school" ){
+		$udic_code = $_POST['udic_code'];
 
-		$query = "select * from kriya_school_list where school_id = '" . mysqli_escape_string($connection, $udic_code) . "' ";
+		$query = "select * from kriya_school_list where school_id = '" . $udic_code . "' ";
 		$res = mysqli_query( $connection, $query );
 		if( mysqli_error($connection) ){
 			echo json_encode( ["status"=>"error", "error"=>mysqli_error($connection)] );exit;
 		}
 		$row = mysqli_fetch_assoc( $res );
-		if( !$row ){
-			echo json_encode([
-				"status"=>"error",
-				"error"=>"School not found"
-			]);
-			exit;
-		}
 
 		$query = "update kriya_schools set 
-		phone = '" . mysqli_escape_string( $connection, $data['phone'] ) . "',
-		phone2 = '" . mysqli_escape_string( $connection, $data['phone2'] ) . "',
-		school_id = '".mysqli_escape_string( $connection, $data['school_id'])."',
-		contact_person = '".mysqli_escape_string( $connection, $data['contact_person'])."',
+		phone = '" . mysqli_escape_string( $connection, $_POST['mobile'] ) . "',
+		school_id = '".mysqli_escape_string( $connection, $_POST['udic_code'])."',
 		school_name = '".mysqli_escape_string( $connection, $row['school_name'])."',
 		village_name = '".mysqli_escape_string( $connection, $row['mandal_name'])."',
-		state_name = '".mysqli_escape_string( $connection, $row['state_name'])."',
+		mandal_name = '".mysqli_escape_string( $connection, $row['village_name'])."',
 		district_name = '".mysqli_escape_string( $connection, $row['district_name'])."',
 		school_category = '".mysqli_escape_string( $connection, trim($row['school_category'])) ."',
 		reg_date = '" . date("Y-m-d H:i:s") . "',
 		ip = '" . $_SERVER['REMOTE_ADDR'] . "',
-		type = '".  mysqli_escape_string( $connection, $data['type'] ) . "'
+		type = '".  mysqli_escape_string( $connection, $_POST['type'] ) . "'
 		where id = " . $_SESSION['user_id'];
 		//echo $query;exit;
 		mysqli_query( $connection, $query );
 		if( mysqli_error( $connection ) ){
 			echo json_encode([
-				"status"=>"error",
+				"status"=>"fail",
 				"error"=>"DB Error<BR>Please try after sometime!"
 			]);
 			exit;
@@ -1142,227 +1297,4 @@ if( $_POST['action'] == "search_school"){
 		]);	exit;
 	}
 
-}
-
-if( $_POST['action'] == "save_nominations" ){
-
-
-	if( !$_POST['record'] ){
-		echo json_encode([
-			"status"=>"error",
-			"error"=>"Input missing"
-		]);
-		exit;
-	}
-
-	$res = mysqli_query( $connection, "select * from kriya_schools where id = " . $_SESSION['user_id'] );
-	$row = mysqli_fetch_assoc($res);
-
-	$res2 = mysqli_query( $connection, "delete from kriya_students where user_id = " . $_SESSION['user_id'] );
-
-	$entries = json_decode($_POST['record'],true);
-	// print_r($entries);exit;
- 	$totalCount = 0;
-    $boys_cnt = 0;
-    $girls_cnt = 0;
-
-    foreach ($entries as $entry) {
-        if (isset($entry['jrs'])) {
-        	foreach ($entry['jrs'] as $studentArray) {
-	            $totalCount += count($studentArray);
-	            foreach ($studentArray as $student) {
-	                if (strtolower($student['gender']) === 'male') {
-	                    $boys_cnt++;
-	                } elseif (strtolower($student['gender']) === 'female') {
-	                    $girls_cnt++;
-	                }
-	            }
-	        }
-        }
-        if (isset($entry['sub_jrs'])) {
-        	foreach ($entry['sub_jrs'] as $studentArray) {
-	            $totalCount += count($studentArray);
-	            foreach ($studentArray as $student) {
-	                if (strtolower($student['gender']) === 'male') {
-	                    $boys_cnt++;
-	                } elseif (strtolower($student['gender']) === 'female') {
-	                    $girls_cnt++;
-	                }
-	            }
-	        }
-        }
-        if (isset($entry['srs'])) {
-        	foreach ($entry['srs'] as $studentArray) {
-	            $totalCount += count($studentArray);
-	            foreach ($studentArray as $student) {
-	                if (strtolower($student['gender']) === 'male') {
-	                    $boys_cnt++;
-	                } elseif (strtolower($student['gender']) === 'female') {
-	                    $girls_cnt++;
-	                }
-	            }
-	        }
-        }
-    }
-
-
-    $query = "update kriya_schools set
-    total_students = '" . mysqli_escape_string($connection, $totalCount) . "',
-    boys = '" . mysqli_escape_string($connection, $boys_cnt) . "',
-    girls = '" . mysqli_escape_string($connection, $girls_cnt) . "',
-    selection = '" . mysqli_escape_string($connection, json_encode($entries, JSON_PRETTY_PRINT)) . "'
-	where id = " . $_SESSION['user_id'];
-
-	mysqli_query( $connection, $query );
-	if( mysqli_error($connection) ){
-		echo "there was an error in query";
-		echo mysqli_error($connection);
-		exit;
-	}
-
-	foreach ($entries as $entryID => $entry) {
-		if (isset($entry['sub_jrs'])) {
-    		foreach ($entry['sub_jrs'] as $studentArray) {
-    			foreach ($studentArray as $student) {
-					$query = "insert into kriya_students set
-					user_id = '" . mysqli_escape_string($connection, $_SESSION['user_id']) . "',
-					item_id = '" . mysqli_escape_string($connection, $entryID) . "',
-					category = 'sub_jrs',
-					name = '" . mysqli_escape_string($connection, $student['name']) . "',
-					age = '" . mysqli_escape_string($connection, $student['age']) . "',
-					class = '" . mysqli_escape_string($connection, $student['class']) . "',
-					gender = '" . mysqli_escape_string($connection, $student['gender']) . "'";
-
-					if (!mysqli_query($connection, $query)) {
-		                echo json_encode([
-		                	"status" => "error",
-		                	"error" => "Error inserting student: " . mysqli_error($connection)
-		                ]);
-		                exit;
-		            }
-		        }
-	        }
-		}
-
-		if (isset($entry['jrs'])) {
-    		foreach ($entry['jrs'] as $studentArray) {
-    			foreach ($studentArray as $student) {
-					$query = "insert into kriya_students set
-					user_id = '" . mysqli_escape_string($connection, $_SESSION['user_id']) . "',
-					item_id = '" . mysqli_escape_string($connection, $entryID) . "',
-					category = 'jrs',
-					name = '" . mysqli_escape_string($connection, $student['name']) . "',
-					age = '" . mysqli_escape_string($connection, $student['age']) . "',
-					class = '" . mysqli_escape_string($connection, $student['class']) . "',
-					gender = '" . mysqli_escape_string($connection, $student['gender']) . "'";
-
-					if (!mysqli_query($connection, $query)) {
-		                echo json_encode([
-		                	"status" => "error",
-		                	"error" => "Error inserting student: " . mysqli_error($connection)
-		                ]);
-		                exit;
-		            }
-		        }
-	        }
-		}
-
-		if (isset($entry['srs'])) {
-    		foreach ($entry['srs'] as $studentArray) {
-    			foreach ($studentArray as $student) {
-					$query = "insert into kriya_students set
-					user_id = '" . mysqli_escape_string($connection, $_SESSION['user_id']) . "',
-					item_id = '" . mysqli_escape_string($connection, $entryID) . "',
-					category = 'srs',
-					name = '" . mysqli_escape_string($connection, $student['name']) . "',
-					age = '" . mysqli_escape_string($connection, $student['age']) . "',
-					class = '" . mysqli_escape_string($connection, $student['class']) . "',
-					gender = '" . mysqli_escape_string($connection, $student['gender']) . "'";
-
-					if (!mysqli_query($connection, $query)) {
-		                echo json_encode([
-		                	"status" => "error",
-		                	"error" => "Error inserting student: " . mysqli_error($connection)
-		                ]);
-		                exit;
-		            }
-		        }
-	        }
-		}
-	}
-
-	$options = [];
-	$res = mysqli_query($connection, "select * from kriya_options where user_id = " . $_SESSION['user_id']);
-	while ($row = mysqli_fetch_assoc($res)) {
-	    $options[$row['item_id']] = $row;
-	}
-
-	foreach ($entries as $key => $entry) {
-	    $sub_jrs = $jrs = $srs = $sub_jrs_cnt = $jrs_cnt = $srs_cnt = 0;
-
-	    if (isset($entry['sub_jrs'])) {
-	        $sub_jrs = count($entry['sub_jrs']);
-	        foreach ($entry['sub_jrs'] as $studentArray) {
-	            $sub_jrs_cnt += count($studentArray);
-	        }
-	    }
-
-	    if (isset($entry['jrs'])) {
-	        $jrs = count($entry['jrs']);
-	        foreach ($entry['jrs'] as $studentArray) {
-	            $jrs_cnt += count($studentArray);
-	        }
-	    }
-
-	    if (isset($entry['srs'])) {
-	        $srs = count($entry['srs']);
-	        foreach ($entry['srs'] as $studentArray) {
-	            $srs_cnt += count($studentArray);
-	        }
-	    }
-
-	    // print_r($entry);
-	    // exit;
-	    // echo $srs;
-	    // echo $srs_cnt;
-	    // exit;
-
-	    if (isset($options[$key])) {
-	        $query = "update kriya_options set
-	            sub_jrs = '" . $sub_jrs . "',
-	            jrs = '" .$jrs . "',
-	            srs = '" . $srs . "',
-	            sub_jrs_cnt = '" . $sub_jrs_cnt . "',
-	            jrs_cnt = '" . $jrs_cnt . "',
-	            srs_cnt = '" . $srs_cnt . "'
-	            where user_id = '" . $_SESSION['user_id'] . "' and item_id = '" . $key . "' ";
-	    } else {
-	        $query = "insert into kriya_options set
-	        user_id = '" . $_SESSION['user_id'] . "',
-	        item_id = '" . $key . "',
-	        sub_jrs = '" . $sub_jrs . "',
-	        sub_jrs_cnt = '" . $sub_jrs_cnt . "',
-	        jrs = '" . $jrs . "',
-	        jrs_cnt = '" . $jrs_cnt . "',
-	        srs = '" . $srs . "',
-	        srs_cnt = '" . $srs_cnt . "'";
-	    }
-
-	    mysqli_query($connection, $query);
-	    if (mysqli_error($connection)) {
-	        echo json_encode([
-	            "status" => "error",
-	            "error" => "There was an error in the query: " . mysqli_error($connection)
-	        ]);
-	        exit;
-	    }
-	}
-
-
-	sendemail( $_SESSION['user_id'] );
-
-	echo json_encode([
-		"status"=>"success",
-		"error"=>""
-	]);	exit;	
 }

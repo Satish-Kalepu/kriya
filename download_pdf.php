@@ -1,5 +1,7 @@
 <?php
 
+include('../config_global.php');
+
 session_start();
 
 include('db.php');
@@ -18,7 +20,7 @@ if( $_GET['event'] == 'download_pdf' ){
 		exit;
 	}
 	$row1 = mysqli_fetch_assoc($res1);
-	$query = "select * from kriya_options where school_id = '".$_GET['record_id']."' ";
+	$query = "select * from kriya_options where user_id = '".$_GET['record_id']."' ";
 	$res2 = mysqli_query($connection,$query);
 	if(mysqli_error($connection)){
 		echo $query;
