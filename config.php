@@ -261,7 +261,7 @@ $config_categories  = array(
 	"english"=> "Short Plays", 
 	"details"=>"Send video on Whatsapp to 9063924369 for Scrutiny", 
 	"enabled"=> array( 1, 1, 1), 
-	"max"=> array( [1,15], [1,15], [1,15] ),
+	"max"=> array( [2,10], [2,10], [2,10] ),
 	"group"=>true,
 	),
 "102"=>array(
@@ -407,7 +407,7 @@ $config_categories  = array(
 	"details"=>"Minimum 10 minutes. Choose a topic suitable for age group", 
 	"enabled"=> array( 1, 1, 1), 
 	"group"=>1,
-	"max"=>array( [1,3], [1,3], [1,3] ),
+	"max"=>array( [3,4], [3,4], [3,4] ),
 	 ), 
 "119"=> array(
 	"sno"=> "119",
@@ -471,7 +471,7 @@ $config_categories  = array(
 	"english"=> "Mime", 
 	"details"=>"min 10mins. choose topic suitable for age group", 
 	 "enabled"=> array( 0, 1, 1), 
-	 "max"=> array( 0, [1,2], [1,2] ),
+	 "max"=> array( 0, [2,10], [2,10] ),
 	 ), 
 "127"=> array(
 	 "sno"=> "127",
@@ -553,244 +553,6 @@ $state_data = array(
 	    )
     ),
     array(
-        'name' => 'Arunachal Pradesh',
-        'districts' => array(
-            'Tawang', 'West Kameng', 'East Kameng', 'Papum Pare', 'Kurung Kumey',
-            'Kra Daadi', 'Lower Subansiri', 'Upper Subansiri', 'West Siang',
-            'East Siang', 'Siang', 'Upper Siang', 'Lower Siang', 'Lower Dibang Valley',
-            'Dibang Valley', 'Anjaw', 'Lohit', 'Namsai', 'Changlang', 'Tirap', 'Longding'
-        )
-    ),
-    array(
-        'name' => 'Assam',
-        'districts' => array(
-            'Baksa', 'Barpeta', 'Biswanath', 'Bongaigaon', 'Cachar', 'Charaideo',
-            'Chirang', 'Darrang', 'Dhemaji', 'Dhubri', 'Dibrugarh', 'Goalpara',
-            'Golaghat', 'Hailakandi', 'Hojai', 'Jorhat', 'Kamrup Metropolitan',
-            'Kamrup', 'Karbi Anglong', 'Karimganj', 'Kokrajhar', 'Lakhimpur',
-            'Majuli', 'Morigaon', 'Nagaon', 'Nalbari', 'Dima Hasao', 'Sivasagar',
-            'Sonitpur', 'South Salmara-Mankachar', 'Tinsukia', 'Udalguri', 'West Karbi Anglong'
-        )
-    ),
-    array(
-        'name' => 'Bihar',
-        'districts' => array(
-            'Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur',
-            'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran (Motihari)', 'Gaya',
-            'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur (Bhabua)', 'Katihar',
-            'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani',
-            'Munger (Monghyr)', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna',
-            'Purnia (Purnea)', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura',
-            'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'
-        )
-    ),
-    array(
-        'name' => 'Chandigarh (UT)',
-        'districts' => array('Chandigarh')
-    ),
-    array(
-        'name' => 'Chhattisgarh',
-        'districts' => array(
-            'Balod', 'Baloda Bazar', 'Balrampur', 'Bastar', 'Bemetara',
-            'Bijapur', 'Bilaspur', 'Dantewada (South Bastar)', 'Dhamtari', 'Durg',
-            'Gariyaband', 'Janjgir-Champa', 'Jashpur', 'Kabirdham (Kawardha)',
-            'Kanker (North Bastar)', 'Kondagaon', 'Korba', 'Korea (Koriya)',
-            'Mahasamund', 'Mungeli', 'Narayanpur', 'Raigarh', 'Raipur',
-            'Rajnandgaon', 'Sukma', 'Surajpur', 'Surguja'
-        )
-    ),
-    array(
-        'name' => 'Dadra and Nagar Haveli (UT)',
-        'districts' => array('Dadra & Nagar Haveli')
-    ),
-    array(
-        'name' => 'Daman and Diu (UT)',
-        'districts' => array('Daman', 'Diu')
-    ),
-    array(
-        'name' => 'Delhi (NCT)',
-        'districts' => array(
-            'Central Delhi', 'East Delhi', 'New Delhi', 'North Delhi', 
-            'North East Delhi', 'North West Delhi', 'Shahdara', 
-            'South Delhi', 'South East Delhi', 'South West Delhi', 'West Delhi'
-        )
-    ),
-    array(
-        'name' => 'Goa',
-        'districts' => array('North Goa', 'South Goa')
-    ),
-    array(
-        'name' => 'Gujarat',
-        'districts' => array(
-            'Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha (Palanpur)',
-            'Bharuch', 'Bhavnagar', 'Botad', 'Chhota Udepur', 'Dahod', 
-            'Dangs (Ahwa)', 'Devbhoomi Dwarka', 'Gandhinagar', 'Gir Somnath',
-            'Jamnagar', 'Junagadh', 'Kachchh', 'Kheda (Nadiad)', 'Mahisagar',
-            'Mehsana', 'Morbi', 'Narmada (Rajpipla)', 'Navsari', 
-            'Panchmahal (Godhra)', 'Patan', 'Porbandar', 'Rajkot', 
-            'Sabarkantha (Himmatnagar)', 'Surat', 'Surendranagar', 
-            'Tapi (Vyara)', 'Vadodara', 'Valsad'
-        )
-    ),
-    array(
-        'name' => 'Haryana',
-        'districts' => array(
-            'Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad',
-            'Gurgaon', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal',
-            'Kurukshetra', 'Mahendragarh', 'Mewat', 'Palwal', 'Panchkula',
-            'Panipat', 'Rewari', 'Rohtak', 'Sirsa', 'Sonipat', 'Yamunanagar'
-        )
-    ),
-    array(
-        'name' => 'Himachal Pradesh',
-        'districts' => array(
-            'Bilaspur', 'Chamba', 'Hamirpur', 'Kangra', 'Kinnaur', 'Kullu',
-            'Lahaul & Spiti', 'Mandi', 'Shimla', 'Sirmaur (Sirmour)', 
-            'Solan', 'Una'
-        )
-    ),
-    array(
-        'name' => 'Jammu and Kashmir',
-        'districts' => array(
-            'Anantnag', 'Bandipore', 'Baramulla', 'Budgam', 'Doda',
-            'Ganderbal', 'Jammu', 'Kargil', 'Kathua', 'Kishtwar', 
-            'Kulgam', 'Kupwara', 'Leh', 'Poonch', 'Pulwama', 'Rajouri',
-            'Ramban', 'Reasi', 'Samba', 'Shopian', 'Srinagar', 'Udhampur'
-        )
-    ),
-    array(
-        'name' => 'Jharkhand',
-        'districts' => array(
-            'Bokaro', 'Chatra', 'Deoghar', 'Dhanbad', 'Dumka', 
-            'East Singhbhum', 'Garhwa', 'Giridih', 'Godda', 'Gumla', 
-            'Hazaribag', 'Jamtara', 'Khunti', 'Koderma', 'Latehar', 
-            'Lohardaga', 'Pakur', 'Palamu', 'Ramgarh', 'Ranchi', 
-            'Sahibganj', 'Seraikela-Kharsawan', 'Simdega', 'West Singhbhum'
-        )
-    ),
-    array(
-        'name' => 'Karnataka',
-        'districts' => array(
-            'Bagalkot', 'Ballari (Bellary)', 'Belagavi (Belgaum)', 
-            'Bengaluru (Bangalore) Rural', 'Bengaluru (Bangalore) Urban',
-            'Bidar', 'Chamarajanagar', 'Chikballapur', 
-            'Chikkamagaluru (Chikmagalur)', 'Chitradurga', 'Dakshina Kannada', 
-            'Davangere', 'Dharwad', 'Gadag', 'Hassan', 'Haveri', 
-            'Kalaburagi (Gulbarga)', 'Kodagu', 'Kolar', 'Koppal', 
-            'Mandya', 'Mysuru (Mysore)', 'Raichur', 'Ramanagara', 
-            'Shivamogga (Shimoga)', 'Tumakuru (Tumkur)', 'Udupi', 
-            'Uttara Kannada (Karwar)', 'Vijayapura (Bijapur)', 'Yadgir'
-        )
-    ),
-    array(
-        'name' => 'Kerala',
-        'districts' => array(
-            'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 
-            'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad', 
-            'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
-        )
-    ),
-    array(
-        'name' => 'Lakshadweep (UT)',
-        'districts' => array('Lakshadweep')
-    ),
-    array(
-        'name' => 'Madhya Pradesh',
-        'districts' => array(
-            'Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat',
-            'Barwani', 'Betul', 'Bhopal', 'Burhanpur', 'Chhindwara', 
-            'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 
-            'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 
-            'Jhabua', 'Katni', 'Khandwa', 'Khargone', 'Mandla', 
-            'Mandsaur', 'Morena', 'Narmada', 'Neemuch', 'Panna', 
-            'Raisen', 'Rajaudhan', 'Ratlam', 'Rewa', 'Sagar', 
-            'Satna', 'Sehore', 'Seoni', 'Shahdol', 'Shajapur', 
-            'Sheopur', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 
-            'Umaria', 'Vidisha'
-        )
-    ),
-    array(
-        'name' => 'Maharashtra',
-        'districts' => array(
-            'Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Bhandara',
-            'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Jalna', 
-            'Jalgaon', 'Kolhapur', 'Latur', 'Mumbai City',
-            'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nasik', 'Osmanabad',
-            'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sindhudurg', 
-            'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'
-        )
-    ),
-    array(
-        'name' => 'Manipur',
-        'districts' => array(
-            'Bishnupur', 'Chandel', 'Churachandpur', 'Imphal East', 
-            'Imphal West', 'Senapati', 'Tamenglong', 'Thoubal', 
-            'Ukhrul'
-        )
-    ),
-    array(
-        'name' => 'Meghalaya',
-        'districts' => array('East Garo Hills', 'East Khasi Hills', 'North Garo Hills', 'South Garo Hills', 'West Garo Hills', 'West Khasi Hills')
-    ),
-    array(
-        'name' => 'Mizoram',
-        'districts' => array('Aizawl', 'Champhai', 'Lunglei', 'Mamit', 'Saiha', 'Serchhip')
-    ),
-    array(
-        'name' => 'Nagaland',
-        'districts' => array('Dimapur', 'Kiphire', 'Mokokchung', 'Mon', 'Peren', 'Phek', 'Tuensang', 'Wokha', 'Zunheboto')
-    ),
-    array(
-        'name' => 'Odisha',
-        'districts' => array(
-            'Angul', 'Balangir', 'Balasore', 'Bargarh', 'Bhadrak',
-            'Bolangir', 'Dhenkanal', 'Ganjam', 'Gajapati', 
-            'Jagatsinghpur', 'Jajpur', 'Jharsuguda', 'Kalahandi', 
-            'Kandhamal', 'Keonjhar', 'Khurda', 'Koraput', 'Nabarangpur', 
-            'Nayagarh', 'Nuapada', 'Rayagada', 'Sambalpur', 
-            'Subarnapur', 'Sundergarh'
-        )
-    ),
-    array(
-        'name' => 'Puducherry (UT)',
-        'districts' => array('Karaikal', 'Mahe', 'Puducherry', 'Yanam')
-    ),
-    array(
-        'name' => 'Punjab',
-        'districts' => array(
-            'Amritsar', 'Barnala', 'Bathinda', 'Faridkot', 'Fatehgarh Sahib',
-            'Fazilka', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 
-            'Ludhiana', 'Mansa', 'Moga', 'Patiala', 'Rupnagar', 
-            'SAS Nagar (Mohali)', 'Sangrur', 'Tarn Taran'
-        )
-    ),
-    array(
-        'name' => 'Rajasthan',
-        'districts' => array(
-            'Ajmer', 'Alwar', 'Bikaner', 'Bundi', 'Chittorgarh',
-            'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Jaipur', 
-            'Jaisalmer', 'Jalor', 'Jhunjhunu', 'Nagaur', 
-            'Pali', 'Rajsamand', 'Sikar', 'Sirohi', 
-            'Tonk', 'Udaipur'
-        )
-    ),
-    array(
-        'name' => 'Sikkim',
-        'districts' => array('East Sikkim', 'North Sikkim', 'South Sikkim', 'West Sikkim')
-    ),
-    array(
-        'name' => 'Tamil Nadu',
-        'districts' => array(
-            'Ariyalur', 'Chennai', 'Coimbatore', 'Cuddalore', 
-            'Dharmapuri', 'Dindigul', 'Erode', 'Kanchipuram', 
-            'Kanyakumari', 'Karur', 'Madurai', 'Nagapattinam', 
-            'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai', 
-            'Ramanathapuram', 'Salem', 'Sivagangai', 'Thanjavur', 
-            'Theni', 'Tiruchirappalli', 'Tirunelveli', 
-            'Tiruppur', 'Vellore', 'Virudhunagar'
-        )
-    ),
-    array(
         'name' => 'Telangana',
         'districts' => array(
             'Adilabad', 'Hyderabad', 'Jagtial', 'Jangaon', 
@@ -799,54 +561,6 @@ $state_data = array(
             'Rajanna Sircilla', 'Rangareddy', 'Sangareddy', 
             'Siddipet', 'Vikarabad', 'Wanaparthy', 'Warangal', 
             'Yadadri Bhuvanagiri', 'Mahabubnagar'
-        )
-    ),
-    array(
-        'name' => 'Tripura',
-        'districts' => array(
-            'Dhalai', 'Gomati', 'Khowai', 'North Tripura', 
-            'Sepahijala', 'South Tripura', 'Unakoti', 'West Tripura'
-        )
-    ),
-    array(
-        'name' => 'Uttar Pradesh',
-        'districts' => array(
-            'Agra', 'Aligarh', 'Allahabad', 'Ambedkar Nagar', 
-            'Amethi', 'Amroha', 'Auraiya', 'Ayodhya', 'Azamgarh', 
-            'Badaun', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 
-            'Banda', 'Barabanki', 'Bareilly', 'Basti', 'Bijnor', 
-            'Bulandshahr', 'Chandauli', 'Chhatrapati Shahuji Maharaj Nagar', 
-            'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Faizabad', 
-            'Farrukhabad', 'Fatehpur', 'Firozabad', 'Gautam Buddha Nagar', 
-            'Ghaziabad', 'Ghazipur', 'Gonda', 'Hamirpur', 'Hardoi', 
-            'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 
-            'Kanpur Dehat', 'Kanpur Nagar', 'Kanshiram Nagar', 'Kheri', 
-            'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 
-            'Mathura', 'Mau', 'Mirzapur', 'Mohammedabad', 'Moradabad', 
-            'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Rae Bareli', 
-            'Rampur', 'Saharanpur', 'Sambhal', 'Sant Ravidas Nagar', 
-            'Shahjahanpur', 'Shrawasti', 'Siddharth Nagar', 'Sitapur', 
-            'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi', 
-            'Shamli', 'Bijnor', 'Hapur'
-        )
-    ),
-    array(
-        'name' => 'Uttarakhand',
-        'districts' => array(
-            'Almora', 'Bageshwar', 'Champawat', 'Dehradun', 
-            'Haridwar', 'Nainital', 'Pauri Garhwal', 
-            'Pithoragarh', 'Rudraprayag', 'Tehri Garhwal', 
-            'Udham Singh Nagar', 'Uttarkashi'
-        )
-    ),
-    array(
-        'name' => 'West Bengal',
-        'districts' => array(
-            'Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 
-            'Dakshin Dinajpur', 'Darjeeling', 'Hooghly', 'Howrah', 
-            'Jalpaiguri', 'Jhargram', 'Malda', 'Medinipur', 
-            'Murshidabad', 'Nadia', 'North 24 Parganas', 
-            'Purulia', 'South 24 Parganas', 'Uttar Dinajpur'
         )
     )
 );

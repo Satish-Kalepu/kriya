@@ -9,7 +9,12 @@
 	}
 
 	if( $_SESSION['logged_in'] == "yes" ){
-		header("Location: home.php");exit;
+		if( !$_SESSION['email'] ){
+			session_destroy();
+			session_regenerate_id();
+			header("Location: index.php");exit;
+		}
+		header("Location: home.php?email=". urlencode($_SESSION['email']) );exit;
 	}
 
 	include('db.php');
@@ -83,7 +88,7 @@
 					    <input type="email" v-model="email" class="form-control form-control-sm" placeholder="Enter Email ID" autocomplete="off" >
 					</div>
 					<div v-if="show_captcha==false&&otp_sent==false" class="mb-3">
-		            	<button type="button" class="btn btn-primary btn-sm" v-on:click="show_captcha=true;reloadcaptcha()">GO</button>
+		            	<button type="button" class="btn btn-sm" v-on:click="show_captcha=true;reloadcaptcha()" style="background-color: #2c95da; color: white;">GO</button>
 		            </div>
 					<template v-if="show_captcha">
 						<div>Security Code</div>
@@ -96,18 +101,18 @@
 						<div  class="mb-3">
 						    <input type="text" class="form-control form-control-sm" v-model="code" id="code" name="code" placeholder="Enter Above Code" required autocomplete="off" >
 						</div>
-						<button type="button" class="btn btn-light btn-sm" @click="send_otp">Get OTP</button>
+						<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="send_otp">Get OTP</button>
 			        </template>
 			        <template v-if="otp_sent" >
 			        	<div class="float-end">
-			        		<button type="button" class="btn btn-link btn-sm" @click="resend_email">Resend OTP</button>
+			        		<button type="button" class="btn btn-link btn-sm" @click="otp_sent = false; show_captcha = true; reloadcaptcha()">Resend OTP</button>
 			        	</div>
 			        	<div>OTP: </div>
 						<div class="mb-3" >
 						    <input type="number" name="email_otp" v-model="email_otp" class="form-control" placeholder="Enter OTP" style="width: 100%;">
 						</div>
 						<div class="mb-3 d-flex justify-content-between">
-							<button type="button" class="btn btn-primary btn-sm" @click="email_login">Login</button>
+							<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="email_login">Login</button>
 						</div>
 					</template>
 					<div v-if="err" class="alert alert-danger mb-3  py-1" role="alert">
@@ -122,7 +127,7 @@
 				<p class="text-white font-weight-bold">Last date for submission and corrections <span class="h5">21st December</span> 2024. Max 60 members are allowed from a school.</p>
 			</div>
 			<div class="text-center">
-			    <img src="/kriya-head4.jpg" class="img-fluid" alt="Description">
+			    <img src="/header_final.jpg" class="img-fluid" alt="Description">
 			</div>
 		</div>
 	</div>
@@ -144,38 +149,12 @@
 				
 			},
 			methods:{
-				validate_email(){
-					const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-					if (!emailPattern.test(this.email)) {
-						alert('Please enter a valid email address.');
-						return;
-					}
-
-					const xhr = new XMLHttpRequest();
-					xhr.open("POST", "actions.php", true);
-					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-					const data = "action=validate_email&email=" + encodeURIComponent(this.email);
-
-					xhr.onreadystatechange = function () {
-						if (xhr.readyState === 4 && xhr.status === 200) {
-							const response = JSON.parse(xhr.responseText);
-							if (response.status === 1) {
-								alert("Email is valid and processed successfully.");
-							} else if (response.status === 0) {
-								alert("Email validation failed: " + response.message);
-							}
-						}
-					};
-
-					xhr.send(data);
-				},
 				send_otp(){
 					this.err = "";
 					this.msg = "";
 					var email = this.email.trim().toLowerCase();
 					var code = this.code.trim();
-					if( email.match(/^[a-z0-9\-\.\_]{2,50}\@[a-z0-9\-\.\_]{2,50}\.[a-z\.]{2,10}$/)  == null ){
+					if( email.match(/^[a-z0-9\-\.\_]{2,100}\@[a-z0-9\-\.\_]{2,100}\.[a-z\.]{2,5}$/)  == null ){
 						this.err = ("Enter proper email");return false;
 					}
 					if( code == "" ){
@@ -195,7 +174,7 @@
 						const response = JSON.parse(con.responseText);
 				        if (response.status === "fail") {
 				            this.err = response.error;
-				            // this.reloadcaptcha();
+				            this.reloadcaptcha();
 				            // this.code = "";
 				        } else if (response.status === "OTPSent") {
 				            this.msg = "OTP Sent Successfully!";
@@ -226,6 +205,7 @@
 				email_login(){
 					// console.log(this.email)
 					var email = this.email.trim().toLowerCase();
+					this.email = email;
 					var email_otp = String(this.email_otp).trim();
 					this.err = "";
 					this.msg = "";
@@ -252,7 +232,7 @@
 							var v= JSON.parse(con.responseText);
 							if( v['status'] == "success" ){
 								this.msg = "Success! redirecting..";
-								document.location = "/home.php";
+								document.location = "/home.php?email="+this.email;
 							}else{
 								this.err = v['error'];
 							}

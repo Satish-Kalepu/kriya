@@ -133,7 +133,7 @@ if( !$_SESSION['logged_in'] ){
 				        	<td>{{ category.sno }}</td>
 				        	<td>{{ category.name }}</td>
 				        	<td class="text-center">
-				                <div v-if="category.enabled[0] && data.school_category in config_school_types['sub_jrs']">
+				                <div v-if="category.enabled[0]">
 									<div v-if="'group' in category" >
 										<div v-if="category.enabled[0]==1" >
 											<button @click="openPopup(category, 'sub_jrs', 0)" :class="studentCount(category.sno, 'sub_jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -155,7 +155,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[1] && data.school_category in config_school_types['jrs']">
+				                <div v-if="category.enabled[1]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[1]==1" >
 											<button @click="openPopup(category, 'jrs', 0)" :class="studentCount(category.sno, 'jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -177,7 +177,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[2] && data.school_category in config_school_types['srs']">
+				                <div v-if="category.enabled[2]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[2]==1" >
 											<button @click="openPopup(category, 'srs', 0)" :class="studentCount(category.sno, 'srs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -220,7 +220,7 @@ if( !$_SESSION['logged_in'] ){
 			        	</thead>
 			        	<tbody style="background-color: #fff4d9;">
 			        		<td class="text-center">
-				                <div v-if="category.enabled[0] && data.school_category in config_school_types['sub_jrs']">
+				                <div v-if="category.enabled[0]">
 									<div v-if="'group' in category" >
 										<div v-if="category.enabled[0]==1" >
 											<button @click="openPopup(category, 'sub_jrs', 0)" :class="studentCount(category.sno, 'sub_jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -242,7 +242,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[1] && data.school_category in config_school_types['jrs']">
+				                <div v-if="category.enabled[1]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[1]==1" >
 											<button @click="openPopup(category, 'jrs', 0)" :class="studentCount(category.sno, 'jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -264,7 +264,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[2] && data.school_category in config_school_types['srs']">
+				                <div v-if="category.enabled[2]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[2]==1" >
 											<button @click="openPopup(category, 'srs', 0)" :class="studentCount(category.sno, 'srs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -536,7 +536,7 @@ if( !$_SESSION['logged_in'] ){
 
 		        	this.calculateTotal();
 
-					if (this.total_students > 60) {
+					if (this.total_students > 60 && this.data['entry_type'] == "free") {
 
 						alert("Max students should be 60 only!");
 
