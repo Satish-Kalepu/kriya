@@ -133,7 +133,7 @@ if( !$_SESSION['logged_in'] ){
 				        	<td>{{ category.sno }}</td>
 				        	<td>{{ category.name }}</td>
 				        	<td class="text-center">
-				                <div v-if="category.enabled[0]">
+				                <div v-if="category.enabled[0]&&data['school_category'] in config_school_types[ 'sub_jrs' ]">
 									<div v-if="'group' in category" >
 										<div v-if="category.enabled[0]==1" >
 											<button @click="openPopup(category, 'sub_jrs', 0)" :class="studentCount(category.sno, 'sub_jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -155,7 +155,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[1]">
+				                <div v-if="category.enabled[1]&&data['school_category'] in config_school_types[ 'jrs' ]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[1]==1" >
 											<button @click="openPopup(category, 'jrs', 0)" :class="studentCount(category.sno, 'jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -177,7 +177,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[2]">
+				                <div v-if="category.enabled[2]&&data['school_category'] in config_school_types[ 'srs' ]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[2]==1" >
 											<button @click="openPopup(category, 'srs', 0)" :class="studentCount(category.sno, 'srs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -220,7 +220,7 @@ if( !$_SESSION['logged_in'] ){
 			        	</thead>
 			        	<tbody style="background-color: #fff4d9;">
 			        		<td class="text-center">
-				                <div v-if="category.enabled[0]">
+				                <div v-if="category.enabled[0]&&data['school_category'] in config_school_types[ 'sub_jrs' ]">
 									<div v-if="'group' in category" >
 										<div v-if="category.enabled[0]==1" >
 											<button @click="openPopup(category, 'sub_jrs', 0)" :class="studentCount(category.sno, 'sub_jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -242,7 +242,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[1]">
+				                <div v-if="category.enabled[1]&&data['school_category'] in config_school_types[ 'jrs' ]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[1]==1" >
 											<button @click="openPopup(category, 'jrs', 0)" :class="studentCount(category.sno, 'jrs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -264,7 +264,7 @@ if( !$_SESSION['logged_in'] ){
 				                <div v-else>-</div>
 				            </td>
 				            <td class="text-center">
-				                <div v-if="category.enabled[2]">
+				                <div v-if="category.enabled[2]&&data['school_category'] in config_school_types[ 'srs' ]">
 				                    <div v-if="'group' in category" >
 				                    	<div v-if="category.enabled[2]==1" >
 											<button @click="openPopup(category, 'srs', 0)" :class="studentCount(category.sno, 'srs',0) > 0 ? 'btn btn-secondary btn-sm' : 'btn btn-light btn-sm'"><b>
@@ -377,7 +377,6 @@ if( !$_SESSION['logged_in'] ){
 					selectedType:'<?=$data['type'] ?>',
 					config_categories : <?=json_encode( $config_categories ) ?>,
 					config_school_types: <?=json_encode($config_school_types) ?>,
-					data1: <?=json_encode($data) ?>,
 					data: <?=json_encode($data) ?>,
 					current_students:[],
 					newStudent: { name: '', gender: '', class: '' },
@@ -386,7 +385,8 @@ if( !$_SESSION['logged_in'] ){
 					game_group: 0,
 					student_details: [],
 					total_students: 0,
-					availableClasses: []
+					availableClasses: [],
+					vmodel: false,
 				};
 			},
 			mounted(){
@@ -423,16 +423,10 @@ if( !$_SESSION['logged_in'] ){
 				        });
 				    }
 
-				    // Reset any other array headings or category groups as needed
-				    if (this.game_category in this.student_details) {
-				        if (this.game_level in this.student_details[this.game_category]) {
-				            // Reset headings or groups within the current level
-				            this.student_details[this.game_category][this.game_level] = {};
-				        }
-				    }
-
 				    // Calculate the total number of students
 				    this.calculateTotal();
+
+        			this.vmodel.hide();
 				    
 				    // Log the updated student details for debugging
 				    console.log(this.student_details);
@@ -462,8 +456,8 @@ if( !$_SESSION['logged_in'] ){
 					this.game_group = vgroup;
 					this.err = "";
 					document.getElementById('popup_category').innerText = vkey['name'];
-					const modal = new bootstrap.Modal(document.getElementById('studentModal'));
-        			modal.show();
+					this.vmodel = new bootstrap.Modal(document.getElementById('studentModal'));
+        			this.vmodel.show();
         			if (vtype == "sub_jrs") {
         				this.min_students = Number(vkey['max'][0][0]);
         				this.max_students = Number(vkey['max'][0][1]);
@@ -547,10 +541,7 @@ if( !$_SESSION['logged_in'] ){
 
 					}
 
-				    // this.current_students = [];
-				    const modalElement = document.getElementById('studentModal');
-					const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-					modal.hide();	
+					this.vmodel.hide();	
 				},
 				calculateTotal() {
 					this.total_students = 0;
@@ -580,6 +571,13 @@ if( !$_SESSION['logged_in'] ){
 					if (this.total_students === 0) {
 					    alert("Select Atleast One Student");
 					    return;
+					}
+
+					if( this.data['type'] == 'school' ){
+						if (this.total_students > 60 ) {
+							alert("You can select maximum 60 Students per school.");
+							return;
+						}
 					}
 					var con = new XMLHttpRequest();
 					con.open("POST", "?", true );
@@ -612,6 +610,54 @@ if( !$_SESSION['logged_in'] ){
 					// console.log(type)
 					this.selectedType = type;
 				},
+				dotest: function(){
+
+					// console.log( JSON.stringify(this.student_details,null,4) );
+					// return;
+
+					this.student_details = {};
+
+					var cnt = 0;
+					for ( var game_category in this.config_categories) {
+						for( var vl=0;vl<3;vl++){
+				        if ( this.config_categories[ game_category ]['enabled'][vl] ) {
+				        	if ( !this.config_categories[ game_category ]['group'] ){
+				        		var max = this.config_categories[ game_category ]['max'][vl][1];
+
+				            	if ( game_category in this.student_details == false ) {
+							        this.student_details[game_category] = {};
+							    }
+							    var vlevel = "sub_jrs";
+							    if( vl == 1 ){ vlevel = "jrs";}
+							    if( vl == 2 ){ vlevel = "srs";}
+
+						        this.student_details[game_category][vlevel] = {};
+							    this.student_details[game_category][vlevel][0] = [];
+
+							    this.current_students = [];
+
+			        			for( var i=0;i<max;i++){
+			        				this.current_students.push({
+								        name: 'something',
+								        gender: 'male',
+								        class: '1'
+								    });
+								    cnt++;
+			        			}
+
+								this.student_details[game_category][vlevel][0].push(...this.current_students);
+
+								console.log( JSON.stringify(this.student_details,null,4) );
+
+								this.calculateTotal();
+
+								if( cnt > 60 ){ return;}
+
+				            }
+				        }
+				    	}
+				    }
+				}
 			},
 		}).mount("#app");
 	</script>

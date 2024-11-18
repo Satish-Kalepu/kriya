@@ -187,7 +187,7 @@
 									    <div>Entry Type:</div>
 									    <div class="d-flex justify-content-between align-items-center">
 									        <span class="fw-bold">{{ record.entry_type }}</span>
-											<button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#changeTypeModal">
+											<button type="button" class="btn btn-link" v-on:click="openchangepopup()" >
 											    Change Type
 											</button>
 									    </div>
@@ -438,19 +438,19 @@
 	                    <div class="mb-3">
 	                        <label class="fs-5"><input type="radio" name="change_type" v-on:change="selectType('govt_school')" value="govt_school"> Govt School</label>
 	                        <p class="text-muted mt-2">
-	                            No entry fee required for Govt. Schools.
+	                            Entry Free for Govt. Schools.
 	                        </p>
 	                    </div>
 	                    <div class="mb-3">
 	                        <label class="fs-5"><input type="radio" name="change_type" v-on:change="selectType('free_private_school')" value="free_private_school"> Private School (No Entry Fee)</label>
 	                        <p class="text-muted mt-2">
-	                            Private School's collecting annual tuition fee for 5th class below 25,000/-, for 10th class below 40,000/- and Not more than that.
+	                            Entry Free for Budget Private Schools collecting annual tuition fee for 5th class below 25,000/-, for 10th class below 40,000/- and Not more than that.
 	                        </p>
 	                    </div>
 	                    <div class="mb-3">
 	                        <label class="fs-5"><input type="radio" name="change_type" v-on:change="selectType('private_school_paid')" value="private_school_paid"> Private School (With Entry Fee)</label>
 	                        <p class="text-muted mt-2">
-	                            Entry Fee 300/- per participant per competition for private schools collecting annual tuition fee more than 25,000/- for 5th class and more that 40,000/- for 10th Class
+	                            Entry Fee 300/- per participant per competition for premium private schools collecting annual tuition fee more than 25,000/- for 5th class and more that 40,000/- for 10th Class
 	                        </p>
 	                    </div>
 	                </div>
@@ -483,7 +483,7 @@
 					mobile_err:'',
 					form_err:'',
 					institute_err:'',
-            		selectedType: '',
+            		selectedType: '<?=$data['entry_type'] ?>',
 					record: <?=json_encode($data) ?>,
 					selected_students: <?=json_encode($data1) ?>,
 					config_categories: <?= json_encode($config_categories) ?>,
@@ -494,6 +494,7 @@
 				    entry_type:'',
 				    proceedClicked: false,
 				    details_inserted: true,
+				    vpop: false,
 				};
 			},
 			watch: {
@@ -533,6 +534,10 @@
 		        }
 			},
 			methods:{
+				openchangepopup: function(){
+					this.vpop =  new bootstrap.Modal('#changeTypeModal');
+					this.vpop.show();
+				},
 				change_type: function(){
 					var x = this.registration_type.split(',');
 					this.record['type'] = x[1];
@@ -547,7 +552,6 @@
 
 		        selectType(type) {
 		            this.selectedType = type;
-
 		            if (type === 'govt_school') {
 			            this.record['entry_type'] = 'free';
 			        } else if (type === 'free_private_school') {
@@ -559,12 +563,8 @@
 
 		        saveSelectedType() {
 		            if (this.selectedType) {
-		                
+						this.vpop.hide();	
 		                this.insert_data();
-
-                		// const myModalEl = document.getElementById('myModal');
-                		// myModalEl.hide();	
-                		document.getElementById('close_modal').click();
 		            }
 		        },
 				submit_data(){
@@ -659,6 +659,7 @@
 				            this.record['village_name'] = '';
 				            this.record['district_name'] = '';
 				            this.record['state_name'] = '';
+				            this.record['school_category'] = '';
 				            this.err = response.error;
 				        } else if (response.status === "success") {
 				            this.school_details = response.data;
@@ -666,6 +667,7 @@
 				            this.record['village_name'] = response.data['village_name'];
 				            this.record['district_name'] = response.data['district_name'];
 				            this.record['state_name'] = response.data['state_name'];
+				            this.record['school_category'] = response.data['school_category'];
 				            this.school_found = true;
 				            this.err = "";
 				        }

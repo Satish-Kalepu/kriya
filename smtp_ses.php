@@ -21,7 +21,9 @@ $SesClient = new SesClient([
     )
 ]);
 
-function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'kriyaonline.alert@gmail.com', $sender_name = 'Kriya Registration' ){
+
+//function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'kriyaonline.alert@gmail.com', $sender_name = 'Kriya Registration' ){
+function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'webmaster@brighttechindia.com', $sender_name = 'Kids Festival' ){
 
 	global $SesClient;
 	
@@ -37,6 +39,8 @@ function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'k
 	exit;
 	}
 	
+
+
 	// Replace sender@example.com with your "From" address.
 	// This address must be verified with Amazon SES.
 	
@@ -45,6 +49,19 @@ function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'k
 	$recipient_emails = [$to];
 	$cc_emails = explode(",",$cc);
 	$bcc_emails = explode(",",$bcc);
+
+	if( 1==15 ){
+		$headers = "From: ". $sender_name . "<". $sender_email . ">\r\n";
+		if( $cc ){
+			$headers .= "CC: " . $cc . "\r\n";
+		}
+		if( $bcc ){
+			$headers .= "BCC: " . $bcc . "\r\n";
+		}
+		$headers .= "MIME-Version: 1.0\r\nContent-type:text/html;charset=UTF-8";
+		mail($to, $subject, $body, $headers, "-f " . $sender_email);
+		return ['status'=>'ok'];
+	}
 	
 	$dest = [
             'ToAddresses' => $recipient_emails,
@@ -72,7 +89,7 @@ function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'k
 	    $result = $SesClient->sendEmail([
 	        'Destination' => $dest,
 	        'ReplyToAddresses' => [$sender_email],
-	        'Source' => $sender_email,
+	        'Source' => $sender_name . "<" . $sender_email . ">",
 	        'Message' => [
 	          'Body' => [
 	              'Html' => [
@@ -95,7 +112,10 @@ function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'k
 	    ]);
 	    $messageId = $result['MessageId'];
 	    $d = ob_get_clean();
-	    return ["status"=>"success","msgid"=>$messageId];
+	    return [
+	    	"status"=>"success",
+	    	"msgid"=>$messageId
+	    ];
 	    //echo("Email sent! Message ID: $messageId"."\n");
 	} catch (AwsException $e) {
 		error_log( "error sending mail: " . $e->getMessage() );
@@ -107,5 +127,3 @@ function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'k
 	}
 
 }
-
-?>
