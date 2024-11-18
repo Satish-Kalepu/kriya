@@ -372,9 +372,9 @@ if( !$_SESSION['logged_in'] ){
 					email_otp:'',
 					err:'',
 					show_captcha: false,
-					max_students:'',
-					min_students:'',
-					selectedType:'<?php echo $data['type']; ?>',
+					max_students:0,
+					min_students:0,
+					selectedType:'<?=$data['type'] ?>',
 					config_categories : <?=json_encode( $config_categories ) ?>,
 					config_school_types: <?=json_encode($config_school_types) ?>,
 					data1: <?=json_encode($data) ?>,
@@ -455,8 +455,8 @@ if( !$_SESSION['logged_in'] ){
 					const hash = `${vtype}-${vkey['sno']}-${vgroup}`;
     				window.location.hash = hash;
 					this.current_students = [];
-					this.min_students = "";
-					this.max_students = "";
+					this.min_students = 0;
+					this.max_students = 0;
 					this.game_level = vtype;
         			this.game_category = vkey['sno'];
 					this.game_group = vgroup;
@@ -465,16 +465,16 @@ if( !$_SESSION['logged_in'] ){
 					const modal = new bootstrap.Modal(document.getElementById('studentModal'));
         			modal.show();
         			if (vtype == "sub_jrs") {
-        				this.min_students = vkey['max'][0][0];
-        				this.max_students = vkey['max'][0][1];
+        				this.min_students = Number(vkey['max'][0][0]);
+        				this.max_students = Number(vkey['max'][0][1]);
         				this.availableClasses = [1, 2, 3, 4, 5];
         			}else if (vtype == "jrs") {
-        				this.min_students = vkey['max'][1][0];
-        				this.max_students = vkey['max'][1][1];
+        				this.min_students = Number(vkey['max'][1][0]);
+        				this.max_students = Number(vkey['max'][1][1]);
         				this.availableClasses = [ 6, 7 ];
         			}else if (vtype == "srs") {
-        				this.min_students = vkey['max'][2][0];
-        				this.max_students = vkey['max'][2][1];
+        				this.min_students = Number(vkey['max'][2][0]);
+        				this.max_students = Number(vkey['max'][2][1]);
         				this.availableClasses = [8, 9, 10];
         			}
 		            this.fetch_students(vkey['sno'],vtype,vgroup);
@@ -536,14 +536,14 @@ if( !$_SESSION['logged_in'] ){
 
 		        	this.calculateTotal();
 
-					if (this.total_students > 60 && this.data['entry_type'] == "free") {
+					if (this.total_students > 60 && this.data['type'] == "school" ){
 
 						alert("Max students should be 60 only!");
 
 						var d = this.total_students - 60;
 						this.student_details[this.game_category][this.game_level][this.game_group].splice(0,d);
 						this.calculateTotal();
-						return;						
+						return;
 
 					}
 

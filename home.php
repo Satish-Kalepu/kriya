@@ -112,7 +112,7 @@
            							<label for="paid_school" style="cursor:pointer;">
            								<div class="mb-2"><strong>Premium Private School</strong></div>
            								<div class="mb-2">Entry Fee 300/- per participant per competition for private schools collecting annual tuition fee more than 25,000/- for 5th class and more that 40,000/- for 10th Class</div>
-           								<div>Paid Entry.</div>
+           								<div>Paid Entry. Maximum 60 students per school</div>
            							</label>
            						</td>
            					</tr>
