@@ -120,29 +120,39 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			<thead>
 			<tr valign='middle' >
 			<td>Reg No</td>
-			<td>Type Of Reg</td>
+			<td>Type</td>
 			<td>School Id</td>
 			<td style="width: 350px;">School Name</td>
 			<td>Contact</td>
 			<td>Students</td>
-			<td>Teachers</td>
-			<td>Acm</td>
+			<td>Amount</td>
+			<td>Status</td>
 			<td>View</td>
 			<td>Delete</td>
 			</tr>
 			</thead><tbody>
 		<?php	foreach($records as $key =>$row){?>
 				<tr>
-				<td align='right'><?=$row['id']?></td>
-				<td><?=$row['type']?></td>
-				<td align='right'><?=$row['school_id']?></td>
-				<td style="word-wrap: break-word;"><?=$row['school_name']?>,<?=$row['village_name']?>,<?=$row['district_name']?></td>
+				<td align='right'><?=$row['id'] ?></td>
+				<td><?=$row['type'] . " " . $row['entry_type'] ?></td>
+				<td align='right'><?=$row['school_id'] ?></td>
+				<td style="word-wrap: break-word;">
+					<?php 
+					if( $row['type'] == 'school' ){
+						echo $row['school_name'] . ", " .$row['village_name'] . ", " .$row['district_name'];
+					}else if( $row['type'] == "institute" ){
+						echo $row['institute'] . ", " .$row['village_name'] . ", " .$row['district_name'];
+					}else if( $row['type'] == "parent" ){
+						echo $row['village_name'] . ", " .$row['district_name'];
+					}
+					?>
+				</td>
 				<td>
 					<?=$row['contact_person']."<BR>". $row['phone'] . ($row['phone2']?",".$row['phone2']:"") .  ($row['email']?"<BR>".$row['email']:"")?>
 				</td>
 				<td align='right'><?=$row['total_students']?$row['total_students']:"-"?></td>
-				<td align='right'><?=($row['total_teachers']?$row['total_teachers']:"-")?></td>
-				<td><?=$row['accommodation']?"Yes":"-"?></td>
+				<td align="right"><?=$row['amount'] ?></td>
+				<td><?=$row['entry_type'] =="paid"?"Pending":"Free" ?></td>
 				<td>
 					<a href='?view=school_details&school_id=<?=$row['id'] ?>'>VIEW</a>
 				</td>
@@ -183,13 +193,25 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 						<td><?=$school['id']?></td>
 					</tr>
 					<tr>
+						<td>Type</td>
+						<td><?=$school['type'] . " " . $school['entry_type'] ?></td>
+					</tr>
+					<?php if( $school['type'] == "school" ){ ?>
+					<tr>
 						<td>School Code</td>
 						<td><?=$school['school_id']?></td>
 					</tr>
 					<tr>
 						<td>School Name</td>
-						<td><?=$school['school_name']?></td>
+						<td><?=htmlspecialchars($school['school_name']) ?></td>
 					</tr>
+					<?php }else if( $school['type'] == "institute" ){ ?>
+					<tr>
+						<td>Institute</td>
+						<td><?=htmlspecialchars($school['institute']) ?></td>
+					</tr>
+					<?php }else if( $school['type'] == "parent" ){ ?>
+					<?php } ?>
 					<tr>
 						<td>City</td>
 						<td><?=$school['village_name'].",".$school['mandal_name'].",".$school['district_name']?></td>
@@ -264,16 +286,24 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 					</tr>
 					<tr>
 						<td>Reg Type</td>
-						<td><?=$school['type']?></td>
+						<td><?=$school['type'] . " " . $school['entry_type'] ?></td>
 					</tr>
+					<?php if( $school['type'] == "school" ){ ?>
 					<tr>
 						<td>School Code</td>
 						<td><?=$school['school_id']?></td>
 					</tr>
 					<tr>
 						<td>School Name</td>
-						<td><?=$school['school_name']?></td>
+						<td><?=htmlspecialchars($school['school_name']) ?></td>
 					</tr>
+					<?php }else if( $school['type'] == "institute" ){ ?>
+					<tr>
+						<td>Institute</td>
+						<td><?=htmlspecialchars($school['institute']) ?></td>
+					</tr>
+					<?php }else if( $school['type'] == "parent" ){ ?>
+					<?php } ?>
 					<tr>
 						<td>City</td>
 						<td><?=$school['village_name'].",".$school['mandal_name'].",".$school['district_name']?></td>
@@ -297,14 +327,6 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 					<tr>
 						<td>Students</td>
 						<td><?=$school['total_students']?></td>
-					</tr>
-					<tr>
-						<td>Teachers</td>
-						<td><?=$school['total_teachers']?></td>
-					</tr>
-					<tr>
-						<td>Accommodation</td>
-						<td><?=($school['accommodation']?"Yes":"No")?></td>
 					</tr>
 					<tr>
 						<td>Registered Date: </td>
