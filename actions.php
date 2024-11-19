@@ -520,7 +520,7 @@ function sendotp( $email, $otp ){
 		$message .= "<p>Kriya Team</p>";
 		$message .= "<p>9063924369, 8332993993</p>";
 
-		$subject = "Kriya OTP";
+		$subject = "Kriya OTP " . $otp;
 
 		$st = send_mail_smtp_ses( $email, "", "", $subject, $message );
 		if( $st['status'] == "fail" ){
@@ -548,12 +548,33 @@ function sendemail( $vid ){
 		$message = "<p>Dear " . preg_replace("/\W+/", " ", $row['contact_person'] ) . "</p>";
 		$message .= "<p>Thank you for your participation.</p>";
 		$message .= "<p>Your registration number: <b>".str_pad($row['id'], 3, "0", STR_PAD_LEFT)."</b></p>";
-		$message .= "<p>" . htmlspecialchars($row['type']) . ": " . htmlspecialchars($row['school_name']) . " - ". htmlspecialchars($row['village_name'])."</p>";
+		if( $row['type'] == 'school' ){
+			$message .= "<p>UDISE Code: " . htmlspecialchars($row['school_id']) . "</p>";
+			$message .= "<p>School: " . htmlspecialchars($row['school_name']) . " - ". htmlspecialchars($row['village_name'])." - ".htmlspecialchars($row['district_name']) . "</p>";
+		}else if( $row['type'] == 'parent' ){
+			$message .= "<p>Registration type: Parent</p>";
+			$message .= "<p>".htmlspecialchars($row['village_name'])." - ".htmlspecialchars($row['district_name']) . "</p>";
+		}else if( $row['type'] == 'institute' ){
+			$message .= "<p>Registration type: Institute</p>";
+			$message .= "<p>Institute: ".$row['institute'] ."<BR>".htmlspecialchars($row['village_name'])." - ".htmlspecialchars($row['district_name']) . "</p>";
+		}
 		$message .= "<p>Phone: " . $row['phone'] . "</p>";
 		$message .= "<p>Email: " . $row["email"] . "</p>";
 		$message .= "<p>Total Students Nominated: " . $row["total_students"] . "</p>";
+		if( $row['entry_type'] == "paid" ){
+			$message .= "<p>Nomination Fees Rs.". $row['amount'] ."/-</p>";
+			$message .= "<p>Amount should be transfered to:<br>";
+			$message .= "Account Name: Kriya Society<br>";
+			$message .= "Account Number: 3260 2200 0034 44<br>";
+			$message .= "Branch: Canara Bank, KAKINADA ADITYA ACADEMY<br>";
+			$message .= "IFSC: CNRB0013260</p>";
+		}
 		$message .= "<p>&nbsp;</p>";
 		$message .= "<p>You can modify nominations of your choice until December 21st 2024.</p>";
+		if( $row['entry_type'] == "paid" ){
+			$message .= "<p>Admin team will validate your payment details and confirm your participation.</p>";
+		}
+		$message .= "<p>Entry passes will be emailed a day before. Students should keep two or more copies of their entry passes</p>";
 
 		ob_start();
 		?>	
@@ -622,7 +643,7 @@ function sendemail( $vid ){
 
 	<br>
 
-    <h3>Student's List</h3>
+    <p>Student List</p>
     <table border="1" cellpadding="5" style="border-collapse:collapse;">
         <thead>
             <tr bgcolor='#f0f0f0'>
@@ -692,7 +713,6 @@ function sendemail( $vid ){
         </tbody>
     </table>
 
-	
 		<?php
 		$dd = ob_get_clean();
 		$message .= $dd;
@@ -1078,12 +1098,6 @@ if( $_POST['action'] == "insert_record" ){
 			echo json_encode([
 				"status"=>"error",
 				"error"=>"Enter Phone Number"
-			]);
-			exit;
-		}else if ($data['school_name'] == "") {
-			echo json_encode([
-				"status"=>"error",
-				"error"=>"Enter School Name"
 			]);
 			exit;
 		}else if ($data['state_name'] == "") {

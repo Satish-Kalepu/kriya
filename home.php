@@ -159,12 +159,7 @@
 							        <div class="d-flex align-items-center mb-2">
 							            <div>School Name:</div>
 							            <div class="ms-1 fw-bold">{{ record.school_name }}</div>
-							        </div>
-							        <div class="d-flex align-items-center mb-2">
-							            <div>School Address:</div>
-							            <div class="ms-1 fw-bold">
-							                {{ record.village_name }},{{ record.district_name }}
-							            </div>
+							            <div class="ms-1 fw-bold">{{ record.village_name }},{{ record.district_name }}</div>
 							        </div>
 							        <div>Teacher Name: <span class="text-danger">*</span></div>
 							        <input type="text" class="form-control form-control-sm mb-3" placeholder="Enter Name" v-model="record['contact_person']">
@@ -177,36 +172,33 @@
 							        <div>Mobile 2:</div>
 							        <input type="number" class="form-control form-control-sm mb-3" placeholder="Enter Name" v-model="record['phone2']">
 
-							        <div class="text-danger mb-3">{{ form_err }}</div> 
+							        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        	<div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
 						        </div>
 						    </div>
 						    <div v-else>
 						    	<div>
-						    		<div class="mb-3">
+						    		<div class="mb-3 d-flex" style="column-gap:10px;">
 									    <div>Entry Type:</div>
-									    <div class="d-flex justify-content-between align-items-center">
-									        <span class="fw-bold">{{ record.entry_type }}</span>
-											<button type="button" class="btn btn-link" v-on:click="openchangepopup()" >
-											    Change Type
-											</button>
-									    </div>
+								        <span class="fw-bold">{{ record.entry_type }}</span>
+										<button type="button" class="btn btn-link btn-sm" style="float:right;" v-on:click="openchangepopup()" >
+										    Change Type
+										</button>
 									</div>
 						    		<div class="mb-3">
-									    <div>School Name:</div>
-									    <span class="fw-bold">{{ record.school_name }}</span>
-									</div>
-									<div class="mb-3">
-									    <div>School Address:</div>
-									    <span class="fw-bold">{{ record.village_name }},{{ record.district_name }}</span>
+									    <div>School:</div>
+									    <div class="fw-bold">
+									    	<div>{{ record.school_name }}</div>
+									    	<div class="fw-bold">{{ record.village_name }}, {{ record.district_name }}</div>
+										</div>
 									</div>
 									<div class="mb-3 d-flex align-items-center">
 							            <div class="me-2">Teacher Name:</div>
 							            <span class="fw-bold">{{ record.contact_person }}</span>
 							        </div>
 							        <div class="mb-3">
-							            <div class="me-2">Mobile Number:</div>
-							            <span class="fw-bold">{{ record.phone }} , {{ record.phone2 }}</span>
+							            <span class="me-2">Mobile Number: </span>
+							            <span class="fw-bold">{{ record.phone }}, {{ record.phone2 }}</span>
 							        </div>
 							        <div class="mb-3 d-flex align-items-center" v-if="record.entry_type == 'paid'">
 									    <div class="me-2">Amount To Be Paid: <span class="fw-bold">
@@ -258,7 +250,7 @@
 						        <input type="number" class="form-control mb-3" v-model="record['phone2']" placeholder="Enter Mobile Number 2">
 
 						        <div class="text-danger mb-3">{{ institute_err }}</div>
-						        <div class="text-danger mb-3">{{ form_err }}</div> 
+						        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        <div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
 						    </div>
 						    <div v-else>
@@ -320,9 +312,6 @@
 						        <div>Mobile 2:</div>
 						        <input type="number" class="form-control form-control-sm mb-3" v-model="record['phone2']">
 
-						        <div>School Name: <span class="text-danger">*</span></div>
-						        <input type="text" class="form-control form-control-sm mb-3" v-model="record['school_name']" placeholder="Enter School Name">
-
 						        <div>State: <span class="text-danger">*</span></div>
 							    <select v-model="record['state_name']"  v-on:change="updateDistricts($event.target.selectedIndex - 1)" class="form-select mb-3">
 							        <option value="">Select State</option>
@@ -338,7 +327,7 @@
 						        <div>Village/City: <span class="text-danger">*</span></div>
 						        <input type="text" class="form-control mb-3" v-model="record['village_name']" placeholder="Enter Village/City">
 
-						        <div class="text-danger mb-3">{{ form_err }}</div> 
+						        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        <div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
 						    </div>
 						    <div v-else>
@@ -353,10 +342,6 @@
 						        <div class="mb-3 d-flex align-items-center">
 						            <div class="me-2">Mobile Number:</div>
 						            <span class="fw-bold">{{ record.phone }} , {{ record.phone2 }}</span>
-						        </div>
-						        <div class="mb-3 d-flex align-items-center">
-						            <div class="me-2">School Name:</div>
-						            <span class="fw-bold">{{ record.school_name }}</span>
 						        </div>
 						        <div class="mb-3 d-flex align-items-center">
 						            <div class="me-2">Village/City Name:</div>
@@ -570,57 +555,81 @@
 				submit_data(){
 					if (this.record['type'] === "school") {
 						this.teacher_name_err = "";
-						this.mobile_err = "";
+						this.form_err = "";
 						if (this.record['school_id'] == "") {
 							this.school_found = false;
-							this.err = "Select School!";return;
-						}else if (this.record['contact_person'] === "") {
-							this.teacher_name_err = "Enter Teacher Name";
+							this.form_err = "Select School!";return;
+						}else if (this.record['contact_person'].match(/^[a-z0-9\ \.]{3,100}$/i) == null ) {
+							this.form_err = "Enter Teacher Name";
 							return;
-						}else if (this.record['phone'] === "") {
-							this.mobile_err = "Please Enter Mobile";
+						}else if (this.record['phone'].toString().match(/^[0-9]{10}$/i) == null ) {
+							this.form_err = "Please enter Phone. should be 10 digits";
 							return;
+						}else if (this.record['phone2'].toString()!="" ) {
+							if (this.record['phone2'].toString().match(/^[0-9]{10}$/i) == null ) {
+								this.form_err = "Phone 2 incorrect. should be 10 digits";
+								return;
+							}
 						}
 					}else if (this.record['type'] === "parent") {
 						this.form_err = "";
-						if (this.record['contact_person'] === "") {
+						if (this.record['contact_person'].match(/^[a-z0-9\ \.]{3,100}$/i) == null ) {
 							this.form_err = "Please Enter Parent Name";
 							return;
-						}else if (this.record['phone'] === "") {
-							this.form_err = "Enter Mobile Number";
+						}
+						if (this.record['phone'].toString().match(/^[0-9]{10}$/i) == null ) {
+							this.form_err = "Please enter Phone. should be 10 digits";
 							return;
-						}else if (this.record['school_name'] === "") {
-							this.form_err = "Enter School Name";
-							return;
-						}else if (this.record['state_name'] === "") {
+						}
+						console.log( this.record['phone2'].toString() );
+						if (this.record['phone2'].toString()!="" ) {
+							if (this.record['phone2'].toString().match(/^[0-9]{10}$/i) == null ) {
+								this.form_err = "Phone 2 incorrect. should be 10 digits";
+								return;
+							}
+						}
+						if (this.record['state_name'] === "") {
 							this.form_err = "Select State";
 							return;
-						}else if (this.record['district_name'] === "") {
+						}
+						if (this.record['district_name'] === "") {
 							this.form_err = "Select District";
 							return;
 						}
-						else if (this.record['village_name'] === "") {
+						if (this.record['village_name'].match(/^[a-z0-9\ \.]{3,100}$/i) == null ) {
 							this.form_err = "Enter Village Name";
 							return;
 						}
+						
 					}else if (this.record['type'] === "institute") {
 						this.form_err = "";
-						if (this.record['institute'] === "") {
+						if (this.record['institute'].match(/^[a-z0-9\-\ \.]{3,100}$/i) == null ) {
 							this.form_err = "Please Enter Institute Name";
 							return;
-						}else if (this.record['phone'] === "") {
-							this.form_err = "Enter Mobile Number";
+						}
+						if (this.record['phone'].toString().match(/^[0-9]{10}$/i) == null ) {
+							this.mobile_err = "Please enter Phone. should be 10 digits";
 							return;
-						}else if (this.record['contact_person'] === "") {
+						}
+						if (this.record['phone2'].toString()!="" ) {
+							if (this.record['phone2'].match(/^[0-9]{10}$/i) == null ) {
+								this.form_err = "Phone 2 incorrect. should be 10 digits";
+								return;
+							}
+						}
+						if (this.record['contact_person'].match(/^[a-z0-9\ \.]{3,100}$/i) == null ) {
 							this.form_err = "Enter Contact Person Name";
 							return;
-						}else if (this.record['state_name'] === "") {
+						}
+						if (this.record['state_name'] === "") {
 							this.form_err = "Select State";
 							return;
-						}else if (this.record['district_name'] === "") {
+						}
+						if (this.record['district_name'] === "") {
 							this.form_err = "Select District";
 							return;
-						}else if (this.record['village_name'] === "") {
+						}
+						if (this.record['village_name'].match(/^[a-z0-9\ \.]{3,100}$/i) == null) {
 							this.form_err = "Enter Village Name";
 							return;
 						}

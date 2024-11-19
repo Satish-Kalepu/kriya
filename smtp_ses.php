@@ -23,7 +23,8 @@ $SesClient = new SesClient([
 
 
 //function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'kriyaonline.alert@gmail.com', $sender_name = 'Kriya Registration' ){
-function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'webmaster@brighttechindia.com', $sender_name = 'Kids Festival' ){
+//webmaster@brighttechindia.com
+function send_mail_smtp_ses( $to, $cc, $bcc, $subject, $body, $sender_email = 'noreply@kriyaonline.org', $sender_name = 'Kids Festival' ){
 
 	global $SesClient;
 	
