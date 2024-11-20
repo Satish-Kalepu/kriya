@@ -18,8 +18,8 @@
 <style>
 body { margin:0px; padding: 0px; }
 * {
-	font-size:11px;
-	font-family:arial;
+	font-size:12px;
+	font-family:Arial;
 }
 .menu a{ margin-left:20px; margin-right:20px; display:inline-block; padding:10px 5px; background-color:#f0f0f0; text-decoration: none; cursor: pointer; }
 .menu{  margin-bottom: 20px; text-align: center; }
@@ -48,9 +48,14 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 	echo "</div>";
 
 	if( $_GET['view'] == "" ){
-		$stu_query = "select sum(total_students) as stu, sum(total_teachers) as tea from kriya_schools";
+		$stu_query = "select sum(total_students) as stu from kriya_schools";
 		$res = mysqli_query($connection,$stu_query);
 		$stu_row = mysqli_fetch_assoc( $res );
+
+		$stu_query2 = "select sum(total_students) as stu from kriya_schools where approved = 1";
+		$res2 = mysqli_query($connection,$stu_query2);
+		$stu_row2 = mysqli_fetch_assoc( $res2 );
+
 		$condition = "";
 		$condition = " where 1=1 ";
 		if( $_GET['keyword'] ){
@@ -90,7 +95,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		<center>
 		<div style='width:1300px; text-align:left;' align='left' >
 			<div align='right' ><a href='?action=download_schools' >Download Excel</a></div>
-			<div style='font-size:14px; line-height:30px;'>Total Students:<?=$stu_row['stu']?>, Total Teachers: <?= $stu_row['tea']?></div>
+			<div style='font-size:14px; line-height:30px;'>Total Students: <?=$stu_row['stu']?>, Total Entry Passes: <?=$stu_row2['stu'] ?></div>
 			<div align="center">
 			<form method="get">
 				<input type="text" name="keyword" id="keyword" placeholder="Search Keyword">
@@ -121,11 +126,12 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			<tr valign='middle' >
 			<td>Reg No</td>
 			<td>Type</td>
-			<td>School Id</td>
-			<td style="width: 350px;">School Name</td>
+			<td>Details</td>
 			<td>Contact</td>
 			<td>Students</td>
 			<td>Amount</td>
+			<td>Collection</td>
+			<td>Entry</td>
 			<td>Status</td>
 			<td>View</td>
 			<td>Delete</td>
@@ -133,17 +139,19 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			</thead><tbody>
 		<?php	foreach($records as $key =>$row){?>
 				<tr>
-				<td align='right'><?=$row['id'] ?></td>
-				<td><?=$row['type'] . " " . $row['entry_type'] ?></td>
-				<td align='right'><?=$row['school_id'] ?></td>
-				<td style="word-wrap: break-word;">
+				<td align='center'><?=$row['id'] ?></td>
+				<td>
+					<div><?=$row['type'] . " " . $row['entry_type'] ?></div>
+				</td>
+				<td>
 					<?php 
 					if( $row['type'] == 'school' ){
-						echo $row['school_name'] . ", " .$row['village_name'] . ", " .$row['district_name'];
+						echo '<div>School: '. $row['school_id'] .'</div>';
+						echo '<div>' . $row['school_name'] . "<BR>" . $row['village_name'] . ", " . $row['district_name'] . "</div>";
 					}else if( $row['type'] == "institute" ){
-						echo $row['institute'] . ", " .$row['village_name'] . ", " .$row['district_name'];
+						echo '<div>' . $row['institute'] . ", " . $row['village_name'] . ", " . $row['district_name']. "</div>";
 					}else if( $row['type'] == "parent" ){
-						echo $row['village_name'] . ", " .$row['district_name'];
+						echo '<div>' . $row['village_name'] . ", " . $row['district_name'] . "</div>";
 					}
 					?>
 				</td>
@@ -152,7 +160,11 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 				</td>
 				<td align='right'><?=$row['total_students']?$row['total_students']:"-"?></td>
 				<td align="right"><?=$row['amount'] ?></td>
-				<td><?=$row['entry_type'] =="paid"?"Pending":"Free" ?></td>
+				<td align="right"><?=$row['collected'] ?></td>
+				<td><div id="approved_<?=$row['id'] ?>" ><?=$row['approved']?"Entry Approved":"Pending" ?></div></td>
+				<td>
+					<input type="button" value="E" onclick="open_payment_status(<?=$row['id'] ?>)" >
+				</td>
 				<td>
 					<a href='?view=school_details&school_id=<?=$row['id'] ?>'>VIEW</a>
 				</td>
@@ -165,8 +177,91 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 			</div>
 		</div>
 		</center>
+		<div id="payment_popup" style="display:none; position: fixed; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 25px #333; background-color: white; width:400px; left:calc( 100% - 50% - 200px );top:300px;">
+			<div style="padding:10px; border-top-right-radius: 5px;border-top-left-radius: 5px; background-color: #f8f8f8;">
+				<div style="float:right; cursor:pointer; padding: 0px 5px; font-weight: bold; border: 1px solid #ccc; background-color: #bbb; ">X</div>
+				<div style="font-weight: bold;">Payment Status</div>
+			</div>
+			<div style="padding:10px; min-height: 200px;">
+				<table cellpadding="10">
+					<tr>
+						<td>Entry</td>
+						<td><div id="entry_details" ></div></td>
+					</tr>
+					<tr>
+						<td>Amount</td>
+						<td><div id="amount_tobe_received" >0</div></td>
+					</tr>
+					<tr>
+						<td>Collection</td>
+						<td><div ><input type="number" id="amount_received" ></div></td>
+					</tr>
+					<tr>
+						<td>Approve Entry</td>
+						<td><label style="cursor:pointer;"><input type="checkbox" id="approve_entry" value="yes" > Approved</label></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="button" onclick="update_status()" value="Update Status" ></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 
-<?php }else if( $_GET['view'] == "cancel_registration" ){
+	<script>
+		var stu_id = -1;
+		function open_payment_status(vid){
+			stu_id = vid;
+
+			document.getElementById("entry_details").innerHTML = "Loading...";
+			document.getElementById("amount_tobe_received").innerHTML = "0";
+			document.getElementById("amount_received").value = "0";
+
+			document.getElementById( "payment_popup" ).style.display = 'block';
+			var con=new XMLHttpRequest();
+			con.open("GET", "?action=get_payment_details&id="+vid, true);
+			con.onload = function(){
+				var d = JSON.parse(this.responseText);
+				console.log( d );
+				if( d['status'] == "fail" ){
+					document.getElementById( "payment_popup" ).style.display = 'none';
+					alert("Error: " + d['error'] );return;
+				}
+				document.getElementById("entry_details").innerHTML = d['data']['details'];
+				document.getElementById("amount_tobe_received").innerHTML = d['data']['amount'];
+				document.getElementById("amount_received").value = d['data']['collected'];
+				if( d['data']['approved'] ){
+					document.getElementById("approve_entry").checked = true;
+				}else{
+					document.getElementById("approve_entry").checked = false;
+				}
+			};
+			con.send();
+		}
+		function update_status(){
+			var vq = "?action=update_payment_status&id="+stu_id+"&collection="+document.getElementById("amount_received").value+"&approved="+(document.getElementById("approve_entry").checked?"true":"false");
+
+			var con=new XMLHttpRequest();
+			con.open("GET", vq, true);
+			con.onload = function(){
+				var d = JSON.parse(this.responseText);
+				console.log( d );
+				if( d['status'] == "fail" ){
+					alert("Error: " + d['error'] );return;
+				}
+				document.getElementById( "payment_popup" ).style.display = 'none';
+				if( document.getElementById("approve_entry").checked ){
+					document.getElementById( "approved_" + stu_id ).innerHTML = "Entry Approved";
+				}else{
+					document.getElementById( "approved_" + stu_id ).innerHTML = "Pending";
+				}
+			};
+			con.send();
+		}
+	</script>
+
+<?php
+	}else if( $_GET['view'] == "cancel_registration" ){
 
 		$query = "select * from kriya_schools where id = '".$_GET['school_id']."' ";
 		$res = mysqli_query($connection,$query);
@@ -237,25 +332,17 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 						<td><?=$school['total_students'] ?></td>
 					</tr>
 					<tr>
-						<td>Teachers</td>
-						<td><?=$school['total_teachers']?></td>
-					</tr>
-					<tr>
-						<td>Accommodation</td>
-						<td><?=($school['accommodation']?"Yes":"No")?></td>
-					</tr>
-					<tr>
 						<td>Registered Date: </td>
 						<td><?=($school['reg_date']!="0000-00-00 00:00:00"?date("d M, Y", strtotime($school['reg_date'])):"")?></td>
 					</tr>
 				</thead>
-				<tbody>
-				</tbody>
 			</table>
 		</center>
 			
 		
-<?php	}else if( $_GET['view'] == "school_details"){
+<?php
+	}else if( $_GET['view'] == "school_details" ){
+		
 		$query = "select * from kriya_schools where id = '".$_GET['school_id']."' ";
 		$res = mysqli_query($connection,$query);
 		$school = mysqli_fetch_assoc($res);  //print_r($school);

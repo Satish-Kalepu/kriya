@@ -46,6 +46,57 @@ if( $_GET['action'] == "getcaptcha" ){
 	exit;
 }
 
+if( $_GET['action'] == "get_payment_details" ){
+	if( !preg_match("/^[0-9]+$/", $_GET['id']) ){
+		echo json_encode(['status'=>"fail", "error"=>"Id incorrect"]);exit;
+	}
+	$res = mysqli_query( $connection, "select * from kriya_schools where id = " . $_GET['id'] );
+	if( mysqli_error( $connection ) ){
+		echo json_encode(['status'=>"fail", "error"=>mysqli_error( $connection )]);exit;
+	}
+	$row = mysqli_fetch_assoc($res);
+	$d = $row['id'] . "<BR>" . $row['entry_type'] . ": " . $row['type'] . "<BR>";
+	if( $row['type'] == 'school' ){
+		$d .= $row['school_id'] . "<BR>" . $row['school_name'] . "<BR>";
+	}else if( $row['type'] == 'parent' ){
+	}else if( $row['type'] == 'institute' ){
+		$d .= $row['institute'] . "<BR>";
+	}
+	$d .= $row['village_name'] . " " . $row['district_name'] . "<BR>";
+	echo json_encode([
+		'status'=>"success", 
+		"data"=>[
+			"details"=>$d,
+			"amount"=>$row['amount'],
+			"collected"=>$row['collected'],
+			"approved"=>($row['approved']==1?true:false)
+		]
+	]);
+	exit;
+}
+if( $_GET['action'] == "update_payment_status" ){
+	if( !preg_match("/^[0-9]+$/", $_GET['id']) ){
+		echo json_encode(['status'=>"fail", "error"=>"Id incorrect"]);exit;
+	}
+	$res = mysqli_query( $connection, "select * from kriya_schools where id = " . $_GET['id'] );
+	if( mysqli_error( $connection ) ){
+		echo json_encode(['status'=>"fail", "error"=>mysqli_error( $connection )]);exit;
+	}
+	$row = mysqli_fetch_assoc($res);
+
+	mysqli_query($connection, "update kriya_schools 
+		set collected = '" . $_GET['collection'] . "', 
+		approved = '" . ($_GET['approved']=='true'?"1":"0") . "' 
+		where id = " . $_GET['id'] );
+	if( mysqli_error( $connection ) ){
+		echo json_encode(['status'=>"fail", "error"=>mysqli_error( $connection )]);exit;
+	}
+
+	echo json_encode([
+		'status'=>"success", 
+	]);
+	exit;
+}
 
 
 if( $_POST['action'] == "cancel_school_registration" ){
@@ -273,15 +324,18 @@ if( $_GET['action'] == "download_schools"){
 		
 	$header = array(
 	  'Reg No',
+	  'Type',
+	  'Entry Type',
 	  'School Code',
-	  'School Details',
-	  'City', 'Mandal', 'District',
+	  'School',
+	  'City', 'District',
 	  'Contact Person',
 	  'Phone','Phone2',
 	  'Email',
 	  'Students',
-	  'Teachers',
-	  'Accommodation'
+	  'Amount',
+	  'Collected',
+	  'Approved'
 	);
 
 	// $header = array(
@@ -302,18 +356,20 @@ if( $_GET['action'] == "download_schools"){
 	while( $row = mysqli_fetch_assoc($res) ){
 		$rows[] = array(
 			str_pad($row['id'],3,"0",STR_PAD_LEFT),
+			($row['type']),
+			($row['entry_type']),
 			($row['school_id']),
-			($row['school_name']),
+			($row['type']=='school'?$row['school_name']:$row['institute']),
 			($row['village_name']),
-			($row["mandal_name"]),
 			($row['district_name']),
 			($row['contact_person'] ),
 			$row['phone'],
 			($row['phone2']?$row['phone2']:""),
 			($row['email']),
 			$row['total_students'],
-			$row['total_teachers'],
-			($row['accommodation']?"Yes":" - ")
+			$row['amount'],
+			$row['collected'],
+			($row['approved']?"Approved":" - ")
 		);
 	}
 
@@ -418,8 +474,6 @@ if( $_POST['action'] == 'register' && $_SESSION['loggedin'] == "y" ){
 		total_students = '" . mysqli_escape_string( $connection, $_POST['total_students']) . "',
 		boys = '" . mysqli_escape_string( $connection, $_POST['boys']) . "',
 		girls = '" . mysqli_escape_string( $connection, ($_POST['total_students']-$_POST['boys']) ) . "',
-		total_teachers = '" . mysqli_escape_string( $connection, $_POST['total_teachers']) . "',
-		accommodation = '" . mysqli_escape_string( $connection, ($_POST['accommodation']=="y"?"1":"0") )  . "',
 		selection = '".  mysqli_escape_string( $connection, json_encode($_POST['stu'],JSON_PRETTY_PRINT) ) . "'
 		where id = " . $_SESSION['user_id'];
 	
