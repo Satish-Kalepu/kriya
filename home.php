@@ -215,7 +215,6 @@
 										<div>Kindly email your transaction details to kriyasociety@gmail.com</div>
 										<div>Admin team will validate your payment details and confirm your participation.</div>
 							        </div>
-							        <div class="mb-3">Note: Entry passes will be emailed a day before. Participants are required to keep at least two copies of entry passes with them</div>
 						    	</div>
 						        <div class="d-flex justify-content-between mb-3">
 						            <button type="button" class="btn" v-on:click="edit_details=true" style="background-color: #2c95da; color: white;">Edit</button>

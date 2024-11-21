@@ -626,7 +626,6 @@ function sendemail( $vid ){
 			$message .= "<p>Admin team will validate your payment details and confirm your participation.</p>";
 		}
 		$message .= "<p>You can modify nominations of your choice until December 21st 2024.</p>";
-		$message .= "<p>Entry passes will be emailed a day before. Students should keep two or more copies of their entry passes</p>";
 
 		ob_start();
 		?>
