@@ -622,18 +622,14 @@ function sendemail( $vid ){
 			$message .= "Account Number: 3260 2200 0034 44<br>";
 			$message .= "Branch: Canara Bank, KAKINADA ADITYA ACADEMY<br>";
 			$message .= "IFSC: CNRB0013260</p>";
-		}
-		$message .= "<p>&nbsp;</p>";
-		$message .= "<p>You can modify nominations of your choice until December 21st 2024.</p>";
-		if( $row['entry_type'] == "paid" ){
+			$message .= "<p>Kindly email your transaction details to kriyasociety@gmail.com</p>";
 			$message .= "<p>Admin team will validate your payment details and confirm your participation.</p>";
 		}
+		$message .= "<p>You can modify nominations of your choice until December 21st 2024.</p>";
 		$message .= "<p>Entry passes will be emailed a day before. Students should keep two or more copies of their entry passes</p>";
 
 		ob_start();
-		?>	
-
-
+		?>
 		
 	<table border="1" cellpadding="5" style="border-collapse:collapse;">
 		<thead>
