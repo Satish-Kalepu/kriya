@@ -196,12 +196,12 @@
 					this.editerr = "School Category Incorrect";return false;
 				}
 				if( this.edit['district_name'].match(/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i) == null && this.edit['district_name'].trim() != "" ){
-					this.editerr = "District Incorrect";return false;
+					this.editerr = "District Incorrect " + this.edit['district_name'];return false;
 				}
-				if( this.edit['mandal_name'].match(/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i) == null && this.edit['mandal_name'].trim() != "" ){
+				if( this.edit['mandal_name'].match(/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i) == null && this.edit['mandal_name'].trim() != "" ){
 					this.editerr = "Mandal Incorrect";return false;
 				}
-				if( this.edit['village_name'].match(/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i) == null && this.edit['village_name'].trim() != "" ){
+				if( this.edit['village_name'].match(/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i) == null && this.edit['village_name'].trim() != "" ){
 					this.editerr = "Village Incorrect";return false;
 				}
 				this.editerr = "Saving...";

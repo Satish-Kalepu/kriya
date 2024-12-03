@@ -342,9 +342,13 @@
 						            <span class="fw-bold">{{ record.contact_person }}</span>
 						        </div>
 						        <div class="mb-3 d-flex align-items-center">
-						            <div class="me-2">Mobile Number:</div>
-						            <span class="fw-bold">{{ record.phone }} , {{ record.phone2 }}</span>
-						        </div>
+									<div class="me-2">Email:</div>
+									<span class="fw-bold">{{ record.email }}</span>
+								</div>
+								<div class="mb-3 d-flex align-items-center">
+									<div class="me-2">Mobile Number:</div>
+									<span class="fw-bold">{{ record.phone }} , {{ record.phone2 }}</span>
+								</div>
 						        <div class="mb-3 d-flex align-items-center">
 						            <div class="me-2">Village/City Name:</div>
 						            <span class="fw-bold">{{ record.village_name }}</span>

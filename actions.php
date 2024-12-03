@@ -862,10 +862,10 @@ if( $_POST['action'] == "master_school_edit" ){
 	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['district_name']) ) && $edit['district_name'] != "" ){
 		echo json_encode( ["status"=>"error", "error"=>"District Incorrect" ] );exit;
 	}
-	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['mandal_name']) ) && $edit['mandal_name'] != "" ){
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i", trim($edit['mandal_name']) ) && $edit['mandal_name'] != "" ){
 		echo json_encode( ["status"=>"error", "error"=>"Mandal Incorrect" ] );exit;
 	}
-	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i", trim($edit['village_name']) ) && $edit['village_name'] != "" ){
+	if( !preg_match( "/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i", trim($edit['village_name']) ) && $edit['village_name'] != "" ){
 		echo json_encode( ["status"=>"error", "error"=>"Village Incorrect" ] );exit;
 	}
 
