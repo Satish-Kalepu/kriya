@@ -546,6 +546,7 @@
 		        	};
 		        }else{
 		        	this.registration_type = this.record['entry_type']+','+this.record['type'];
+		        	this.select_DefaultDistrict();
 		        }
 			},
 			methods:{
@@ -558,10 +559,23 @@
 					this.record['type'] = x[1];
 					this.record['entry_type'] = x[0];
 				},
-				updateDistricts(s_index) {
+				select_DefaultDistrict() {
 					let selected_state = this.record['state_name'];
 					this.districts = [];
-			      	this.districts = this.states[s_index]['districts'];
+					for(var i=0;i<this.states.length;i++){
+						if( this.states[i]['name'] == selected_state ){
+							this.districts = this.states[ i ]['districts'];
+						}
+					}
+			    },
+				updateDistricts() {
+					let selected_state = this.record['state_name'];
+					this.districts = [];
+					for(var i=0;i<this.states.length;i++){
+						if( this.states[i]['name'] == selected_state ){
+							this.districts = this.states[ i ]['districts'];
+						}
+					}
 			      	this.record.district_name = '';
 			    },
 
