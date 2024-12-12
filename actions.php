@@ -1252,6 +1252,7 @@ if( $_POST['action'] == "update_record"){
 		village_name = '" . mysqli_escape_string( $connection, $data['village_name']) . "',
 		district_name = '" . mysqli_escape_string( $connection, $data['district_name']) . "',
 		state_name = '" . mysqli_escape_string( $connection, $data['state_name']) . "',
+		accommodation = '" . mysqli_escape_string( $connection, ($data['accommodation']?1:0)) . "',
 		ip = '" . $_SERVER['REMOTE_ADDR'] . "',
 		recent_date = '" . date("Y-m-d H:i:s") . "'
 		where id = " . $_SESSION['user_id'];

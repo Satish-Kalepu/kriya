@@ -31,6 +31,10 @@
 		$school_res = mysqli_query( $connection, "select * from kriya_schools where email = '".$email."'" );
 		$data = mysqli_fetch_assoc($school_res);
 		if( $data ){
+			//echo json_encode($data,JSON_PRETTY_PRINT);
+			$data['accommodation'] = $data['accommodation']==1?true:false;
+			//echo json_encode($data,JSON_PRETTY_PRINT);
+			//exit;
 			$student_res = mysqli_query( $connection, "select * from kriya_students where user_id = " . $data["id"]);
 			$data1 = [];
 			while ($row2 = mysqli_fetch_assoc($student_res)) {
@@ -172,6 +176,9 @@
 							        <div>Mobile 2:</div>
 							        <input type="number" class="form-control form-control-sm mb-3" placeholder="Enter Name" v-model="record['phone2']">
 
+									<div>Accommodation: </div>
+									<label style="cursor:pointer;" ><input type="checkbox" class="mb-3" v-model="record['accommodation']" > Do you need accommodation?</label>
+
 							        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        	<div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
 						        </div>
@@ -199,6 +206,10 @@
 							        <div class="mb-3">
 							            <span class="me-2">Mobile Number: </span>
 							            <span class="fw-bold">{{ record.phone }}, {{ record.phone2 }}</span>
+							        </div>
+							        <div class="mb-3 d-flex align-items-center">
+							            <div class="me-2">Accommodation:</div>
+							            <span class="fw-bold">{{ (record.accommodation?'Required':'Not Required') }}</span>
 							        </div>
 							        <div class="mb-3 d-flex align-items-center" v-if="record.entry_type == 'paid'">
 									    <div class="me-2">Amount To Be Paid: <span class="fw-bold">
@@ -251,6 +262,9 @@
 						        <div>Mobile 2: <span class="text-danger">*</span></div>
 						        <input type="number" class="form-control mb-3" v-model="record['phone2']" placeholder="Enter Mobile Number 2">
 
+								<div>Accommodation: </div>
+								<label style="cursor:pointer;" ><input type="checkbox" class="mb-3" v-model="record['accommodation']" > Do you need accommodation?</label>
+
 						        <div class="text-danger mb-3">{{ institute_err }}</div>
 						        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        <div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
@@ -284,11 +298,14 @@
 								    <div>Mobile Number:</div>
 								    <span class="fw-bold">{{ record.phone }} , {{ record.phone2 }}</span>
 								</div>
+								<div class="mb-3 d-flex align-items-center">
+						            <div class="me-2">Accommodation:</div>
+						            <span class="fw-bold">{{ (record.accommodation?'Required':'Not Required') }}</span>
+						        </div>
 								<div class="mb-3" v-if="record.entry_type == 'paid'">
 								    <div class="me-2">Amount To Be Paid: <span class="fw-bold">
 								        {{ record.amount }} /-
 								    </span></div>
-								    
 								</div>
 								<div class="mb-3">
 						            <div class="me-2">Amount should transfer to:</div>
@@ -329,6 +346,9 @@
 						        <div>Village/City: <span class="text-danger">*</span></div>
 						        <input type="text" class="form-control mb-3" v-model="record['village_name']" placeholder="Enter Village/City">
 
+								<div>Accommodation: </div>
+								<label style="cursor:pointer;" ><input type="checkbox" class="mb-3" v-model="record['accommodation']" > Do you need accommodation?</label>
+
 						        <div class="text-danger mb-3" v-if="form_err">{{ form_err }}</div> 
 						        <div><button type="button" class="btn" style="background-color: #2c95da; color: white;" v-on:click="submit_data()"><span v-if="is_registered">Update</span><span v-else>Register</span></button></div>
 						    </div>
@@ -361,11 +381,15 @@
 						            <div class="me-2">State Name:</div>
 						            <span class="fw-bold">{{ record.state_name }}</span>
 						        </div>
+						        <div class="mb-3 d-flex align-items-center">
+						            <div class="me-2">Accommodation:</div>
+						            <span class="fw-bold">{{ (record.accommodation?'Required':'Not Required') }}</span>
+						        </div>
+
 						        <div class="mb-3" v-if="record.entry_type == 'paid' && selected_students.length">
 								    <div class="me-2">Amount To Be Paid: <span class="fw-bold">
 								        {{ record.amount }} /-
 								    </span></div>
-								    
 								</div>
 								<div class="mb-3" v-if="selected_students.length">
 						            <div class="me-2">Amount should transfer to:</div>
@@ -514,7 +538,7 @@
 						"total_teachers": "",
 						"boys": "",
 						"girls": "",
-						"accommodation": "",
+						"accommodation": false,
 						"reg_date": "",
 						"recent_date": "",
 						"ip": "",
