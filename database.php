@@ -33,8 +33,8 @@
 				<th>School ID</th>
 				<th>Name</th>
 				<th>Category</th>
+				<th>State</th>
 				<th>District</th>
-				<th>Mandal</th>
 				<th>Village</th>
 			</tr>
 		</thead>
@@ -43,8 +43,8 @@
 				<td class="mp" nowrap v-html="repl(d['school_id'])" ></td>
 				<td nowrap v-html="repl(d['school_name'])" ></td>
 				<td nowrap v-html="repl(d['school_category'])" ></td>
+				<td nowrap v-html="d['state_name']" ></td>
 				<td nowrap v-html="repl(d['district_name'])" ></td>
-				<td nowrap v-html="repl(d['mandal_name'])" ></td>
 				<td nowrap v-html="repl(d['village_name'])" ></td>
 			</tr>
 		</tbody>
@@ -90,15 +90,21 @@
 					</td>
 				</tr>
 				<tr>
+					<td align="right">State</td>
+					<td>
+						<select v-model="edit['state_name']" style="width:100%;" >
+							<option value="" >Select State</option>
+							<option value="Andhra Pradesh" >Andhra Pradesh</option>
+							<option value="Telangana" >Telangana</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
 					<td align="right">District</td>
 					<td><input type="text" v-model="edit['district_name']" placeholder="Distrcit" style="width:100%;" ></td>
 				</tr>
 				<tr>
-					<td align="right">Mandal</td>
-					<td><input type="text" v-model="edit['mandal_name']" placeholder="Mandal" style="width:100%;" ></td>
-				</tr>
-				<tr>
-					<td align="right">Village</td>
+					<td align="right">City/Village</td>
 					<td><input type="text" v-model="edit['village_name']" placeholder="Village" style="width:100%;" ></td>
 				</tr>
 				<tr>
@@ -129,8 +135,8 @@
 				this.edit_id = -1;
 				this.edit = {
 					"school_id":"",
+					"state_name":"",
 					"district_name":"",
-					"mandal_name":"",
 					"village_name":"",
 					"school_name":"",
 					"school_category":"Pr. with Up.Pr. sec. and H.Sec.",
@@ -139,11 +145,15 @@
 				this.vpop = true;
 			},
 			repl: function(v){
-				var s = v.match( this.kpr );
-				if( s != null ){
-					v = v.replace(s[0], "<span>" + s[0] + "</span>");
+				//if( typeof(v) == 'string' )
+				var vv = v+'';
+				{
+					var s = vv.match( this.kpr );
+					if( s != null ){
+						vv = vv.replace(s[0], "<span>" + s[0] + "</span>");
+					}
 				}
-				return v;
+				return vv;
 			},
 			editit: function( vi ){
 				this.edit_id = vi;
@@ -181,13 +191,13 @@
 			},
 			saveit: function(){
 				this.editerr = "";
-				this.edit['school_id'] = this.edit['school_id'].trim();
-				if( this.edit['school_id'].match(/^[0-9]{4,25}$/) == null ){
+				this.edit['school_id'] = (this.edit['school_id']+'').trim();
+				if( this.edit['school_id'].match(/^[0-9]{2,25}$/) == null ){
 					this.editerr = "School Id incorrect";return false;
 				}
 				this.edit['school_name'] = this.edit['school_name'].trim();
 				this.edit['district_name'] = this.edit['district_name'].trim();
-				this.edit['mandal_name'] = this.edit['mandal_name'].trim();
+				this.edit['state_name'] = this.edit['state_name'].trim();
 				this.edit['village_name'] = this.edit['village_name'].trim();
 				if( this.edit['school_name'].match(/^[a-z][a-z0-9\.\,\ \-\_\&\@\(\)]{4,100}$/i) == null ){
 					this.editerr = "School Name Incorrect";return false;
@@ -197,9 +207,6 @@
 				}
 				if( this.edit['district_name'].match(/^[a-z][a-z0-9\.\,\ \-]{4,50}$/i) == null && this.edit['district_name'].trim() != "" ){
 					this.editerr = "District Incorrect " + this.edit['district_name'];return false;
-				}
-				if( this.edit['mandal_name'].match(/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i) == null && this.edit['mandal_name'].trim() != "" ){
-					this.editerr = "Mandal Incorrect";return false;
 				}
 				if( this.edit['village_name'].match(/^[a-z][a-z0-9\.\,\ \-\(\)]{4,50}$/i) == null && this.edit['village_name'].trim() != "" ){
 					this.editerr = "Village Incorrect";return false;
