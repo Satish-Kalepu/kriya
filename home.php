@@ -147,6 +147,9 @@
 					<div v-if="registration_type!=''&&'type' in record">
 						<div v-if="is_registered==false" ><div class="btn btn-primary btn-sm" v-on:click="registration_type=''" >Change Registration Type</div></div>
 						<div v-if="record['type'] == 'school'">
+							<div class="mb-3">
+							    <div>Registration ID: <span class="fw-bold">{{ record.id }}</span></div>
+							</div>
 							<div v-if="edit_details">
 								<div v-if="is_registered==false">
 							 		<div class="mb-3">

@@ -48,6 +48,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 	echo "</div>";
 
 	if( $_GET['view'] == "" ){
+
 		$stu_query = "select sum(total_students) as stu from kriya_schools";
 		$res = mysqli_query($connection,$stu_query);
 		$stu_row = mysqli_fetch_assoc( $res );
@@ -85,7 +86,9 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		$start = $perpage*($current_page-1);              
 		$query_display = "select * from kriya_schools " . $condition ." order by id limit ".$start.",".$perpage;
 		$res_display = mysqli_query( $connection, $query_display);
-		mysqli_error($connection);
+		if( mysqli_error($connection) ){
+			echo mysqli_error($connection);
+		}
 		$records = array();
 		while($row = mysqli_fetch_assoc( $res_display) ){
 			$records[ $row["id"] ] = $row;
@@ -93,6 +96,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		$t1 = $start+$perpage; ?>
 
 		<center>
+		<div style="color:white;"><?=htmlspecialchars($query_display) ?></div>
 		<div style='width:1300px; text-align:left;' align='left' >
 			<div align='right' ><a href='?action=download_schools' >Download Excel</a></div>
 			<div style='font-size:14px; line-height:30px;'>Total Students: <?=$stu_row['stu']?>, Total Entry Passes: <?=$stu_row2['stu'] ?></div>
@@ -179,7 +183,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 		</center>
 		<div id="payment_popup" style="display:none; position: fixed; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 25px #333; background-color: white; width:400px; left:calc( 100% - 50% - 200px );top:300px;">
 			<div style="padding:10px; border-top-right-radius: 5px;border-top-left-radius: 5px; background-color: #f8f8f8;">
-				<div style="float:right; cursor:pointer; padding: 0px 5px; font-weight: bold; border: 1px solid #ccc; background-color: #bbb; ">X</div>
+				<div style="float:right; cursor:pointer; padding: 0px 5px; font-weight: bold; border: 1px solid #ccc; background-color: #bbb; " onclick="close_payment_popup()">X</div>
 				<div style="font-weight: bold;">Payment Status</div>
 			</div>
 			<div style="padding:10px; min-height: 200px;">
@@ -237,6 +241,9 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 				}
 			};
 			con.send();
+		}
+		function close_payment_popup(){
+			document.getElementById( "payment_popup" ).style.display = 'none';
 		}
 		function update_status(){
 			var vq = "?action=update_payment_status&id="+stu_id+"&collection="+document.getElementById("amount_received").value+"&approved="+(document.getElementById("approve_entry").checked?"true":"false");
