@@ -231,8 +231,8 @@ $config_categories  = array(
 	"name"=>"Mime", 
 	"english"=> "Mime", 
 	"details"=>"min 10mins. choose topic suitable for age group", 
-	 "enabled"=> array( 0, 1, 1), 
-	 "max"=> array( 0, [2,10], [2,10] ),
+	 "enabled"=> array( 1, 1, 1), 
+	 "max"=> array( [2,10], [2,10], [2,10] ),
 	 ), 
 "127"=> array(
 	 "sno"=> "127",
