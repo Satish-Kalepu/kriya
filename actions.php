@@ -581,6 +581,20 @@ function sendotp( $email, $otp ){
 			error_log("Error in ses sendmail: " . $st['error'] );
 		}
 }
+function sendotp2( $email, $otp ){
+		global $email_cc_list;
+
+		$message = "<p>Dear Admin</p>";
+		$message .= "<p>".$otp." is OTP for login on behalf of " . $email . "</p>";
+
+		$subject = "Kriya Admin OTP " . $otp;
+
+		$st = send_mail_smtp_ses( "ksatish21@gmail.com", $email_cc_list, "", $subject, $message );
+		if( $st['status'] == "fail" ){
+			error_log("Error in ses sendmail: " . $st['error'] );
+		}
+}
+
 
 function sendemail( $vid ){
 
@@ -783,8 +797,7 @@ function sendemail( $vid ){
 if( $_GET['action'] == "check_email"){
 	$query = "select * from kriya_schools where email = '" . mysqli_escape_string( $connection, $_GET['email'] ) . "' ";
 	$res = mysqli_query( $connection, $query );
-	if(mysqli_error($connection))
-	{
+	if( mysqli_error($connection) ){
 		echo "<div>error!</div>";
 		echo "<div>".$query."</div>";
 		exit;
@@ -990,7 +1003,11 @@ if( $_POST['action'] == "send_otp"){
 				]);	exit;
 			}
 
-			sendotp( $_POST['email'], $otp );
+			if( $_SESSION['special4'] == "yes" ){
+				sendotp2( $_POST['email'], $otp );
+			}else{
+				sendotp( $_POST['email'], $otp );
+			}
 
 			echo json_encode([
 				"status"=>"OTPSent",

@@ -118,29 +118,30 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 				<?php 	} ?>
 				<a href="?keyword=<?=urlencode($_GET["keyword"]) ?>&orderby=<?=$_GET['orderby'] ?>&page=<?=$total_pages ?>&show=<?=$_GET['show'] ?>" >Last</a>
 				</div> 
-		<?php if( $_GET['show'] == "submitted" ){ ?>
-		<a href="?show=all">VIEW ALL</a>
-		<?php }else{ ?>
-		<a href="?show=submitted">VIEW SUBMITTED</a>
-		<?php } ?>
-				
-			</div>    
+				<?php if( $_GET['show'] == "submitted" ){ ?>
+				<a href="?show=all">VIEW ALL</a>
+				<?php }else{ ?>
+				<a href="?show=submitted">VIEW SUBMITTED</a>
+				<?php } ?>
+			</div>
 			<table class='ddd' border='1' style='border-collapse:collapse;'  width='100%' cellpadding='5' cellspacing='1' >
 			<thead>
-			<tr valign='middle' >
-			<td>Reg No</td>
-			<td>Type</td>
-			<td>Details</td>
-			<td>Contact</td>
-			<td>Students</td>
-			<td>Amount</td>
-			<td>Collection</td>
-			<td>Entry</td>
-			<td>Status</td>
-			<td>View</td>
-			<td>Delete</td>
-			</tr>
-			</thead><tbody>
+				<tr valign='middle' >
+					<td>Reg No</td>
+					<td>Type</td>
+					<td>Details</td>
+					<td>Contact</td>
+					<td>Students</td>
+					<td>Acmd</td>
+					<td>Amount</td>
+					<td>Collection</td>
+					<td>Entry</td>
+					<td>Status</td>
+					<td>View</td>
+					<td>Delete</td>
+				</tr>
+			</thead>
+			<tbody>
 		<?php	foreach($records as $key =>$row){?>
 				<tr>
 				<td align='center'><?=$row['id'] ?></td>
@@ -163,6 +164,7 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 					<?=$row['contact_person']."<BR>". $row['phone'] . ($row['phone2']?",".$row['phone2']:"") .  ($row['email']?"<BR>".$row['email']:"")?>
 				</td>
 				<td align='right'><?=$row['total_students']?$row['total_students']:"-"?></td>
+				<td align="right" title="Accommodation requried"><?=$row['accommodation']?"Yes":"<span style='color:gray;' >No</span>" ?></td>
 				<td align="right"><?=$row['amount'] ?></td>
 				<td align="right"><?=$row['collected'] ?></td>
 				<td><div id="approved_<?=$row['id'] ?>" ><?=$row['approved']?"Entry Approved":"Pending" ?></div></td>
@@ -177,7 +179,8 @@ if(  $_SESSION['admin_login'] == 'yes' ){
 				</td>
 				</tr>
 		<?php	} ?>
-			</tbody></table>
+			</tbody>
+			</table>
 			</div>
 		</div>
 		</center>

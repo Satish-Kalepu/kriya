@@ -8,6 +8,16 @@
 		echo "configuration pending..";exit;
 	}
 
+
+	if( $_GET['enable'] == "special4" ){
+		unset($_SESSION['email']);
+		unset($_SESSION['logged_in']);
+		//echo "OK";exit;
+		$_SESSION['special4'] = "yes";
+		header("Location: /?special_login_enabled");
+		exit;
+	}
+
 	if( $_SESSION['logged_in'] == "yes" ){
 		if( !$_SESSION['email'] ){
 			session_destroy();
@@ -20,15 +30,24 @@
 	include('db.php');
 	include('config.php');
 	
-	if( $_SESSION['special3'] == "yes" ){
+	if( $_SESSION['special4'] == "yes" ){
+		//echo "Okk";exit;
 		$login_enable = true;
 	}
+
+	//echo $login_enable
 	
-	if( $_GET['enable'] == "special3" ){
-		$_SESSION['special3'] = "yes";
-		header("Location: /?special_login_enabled");
-		exit;
-	}
+	//print_r( $_GET );exit;
+
+
+	//print_r( $_SESSION );exit;
+
+	// var_dump($login_enable);
+	// if( $login_enable ){
+	// 	echo "OKk";exit;
+	// }else{
+	// 	echo "not ok";exit;
+	// }
 
 	include("smtp_ses.php");
 	include("actions.php");
@@ -82,45 +101,50 @@
 		<div>
 		    <div class="container" style="max-width: 400px;">
 		        <div style="border: 2px solid white; padding: 20px; border-radius: 10px; background-color: #fff4d9;">
-		            <div class="text-center" style="margin-top: 0; font-size:1.2rem; color:#666;">REGISTRATION</div>
-		            <div>Email:</div>
-		            <div class="mb-3">
-					    <input type="email" v-model="email" class="form-control form-control-sm" placeholder="Enter Email ID" autocomplete="off" >
-					</div>
-					<div v-if="show_captcha==false&&otp_sent==false" class="mb-3">
-		            	<button type="button" class="btn btn-sm" v-on:click="show_captcha=true;reloadcaptcha()" style="background-color: #2c95da; color: white;">GO</button>
-		            </div>
-					<template v-if="show_captcha">
-						<div>Security Code</div>
-						<div  class="mb-3">
-							<img src="" alt="CAPTCHA" id="captchaimg" class="img-fluid me-2">
-							<div style="width:30px; height:30px; display: inline-block;cursor: pointer;" v-on:click.prevent="reloadcaptcha" >
-					    		<svg viewBox="0 0 64 64" fill="currentcolor"><path d="m54,32c0,12.15-9.85,22-22,22s-22-9.85-22-22,9.85-22,22-22h2.26l-5.76-5.76,4.24-4.24,13,13-13,13-4.24-4.24,5.76-5.76h-2.26c-8.84,0-16,7.16-16,16s7.16,16,16,16,16-7.16,16-16h6Z"></path></svg>
-						    </div>
+		        	<template v-if="login_enable" >
+			            <div class="text-center" style="margin-top: 0; font-size:1.2rem; color:#666;">REGISTRATION</div>
+			            <div>Email:</div>
+			            <div class="mb-3">
+						    <input type="email" v-model="email" class="form-control form-control-sm" placeholder="Enter Email ID" autocomplete="off" >
 						</div>
-						<div  class="mb-3">
-						    <input type="text" class="form-control form-control-sm" v-model="code" id="code" name="code" placeholder="Enter Above Code" required autocomplete="off" >
+						<div v-if="show_captcha==false&&otp_sent==false" class="mb-3">
+			            	<button type="button" class="btn btn-sm" v-on:click="show_captcha=true;reloadcaptcha()" style="background-color: #2c95da; color: white;">GO</button>
+			            </div>
+						<template v-if="show_captcha">
+							<div>Security Code</div>
+							<div  class="mb-3">
+								<img src="" alt="CAPTCHA" id="captchaimg" class="img-fluid me-2">
+								<div style="width:30px; height:30px; display: inline-block;cursor: pointer;" v-on:click.prevent="reloadcaptcha" >
+						    		<svg viewBox="0 0 64 64" fill="currentcolor"><path d="m54,32c0,12.15-9.85,22-22,22s-22-9.85-22-22,9.85-22,22-22h2.26l-5.76-5.76,4.24-4.24,13,13-13,13-4.24-4.24,5.76-5.76h-2.26c-8.84,0-16,7.16-16,16s7.16,16,16,16,16-7.16,16-16h6Z"></path></svg>
+							    </div>
+							</div>
+							<div  class="mb-3">
+							    <input type="text" class="form-control form-control-sm" v-model="code" id="code" name="code" placeholder="Enter Above Code" required autocomplete="off" >
+							</div>
+							<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="send_otp">Get OTP</button>
+				        </template>
+				        <template v-if="otp_sent" >
+				        	<div class="float-end">
+				        		<button type="button" class="btn btn-link btn-sm" @click="otp_sent = false; show_captcha = true; reloadcaptcha()">Resend OTP</button>
+				        	</div>
+				        	<div>OTP: </div>
+							<div class="mb-3" >
+							    <input type="number" name="email_otp" v-model="email_otp" class="form-control" placeholder="Enter OTP" style="width: 100%;">
+							</div>
+							<div class="mb-3 d-flex justify-content-between">
+								<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="email_login">Login</button>
+							</div>
+						</template>
+						<div v-if="err" class="alert alert-danger mb-3  py-1" role="alert">
+						    {{ err}}
 						</div>
-						<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="send_otp">Get OTP</button>
-			        </template>
-			        <template v-if="otp_sent" >
-			        	<div class="float-end">
-			        		<button type="button" class="btn btn-link btn-sm" @click="otp_sent = false; show_captcha = true; reloadcaptcha()">Resend OTP</button>
-			        	</div>
-			        	<div>OTP: </div>
-						<div class="mb-3" >
-						    <input type="number" name="email_otp" v-model="email_otp" class="form-control" placeholder="Enter OTP" style="width: 100%;">
-						</div>
-						<div class="mb-3 d-flex justify-content-between">
-							<button type="button" class="btn btn-sm" style="background-color: #2c95da; color: white;" @click="email_login">Login</button>
+						<div v-if="msg" class="alert alert-dark mb-3 py-1" role="alert">
+						    {{ msg }}
 						</div>
 					</template>
-					<div v-if="err" class="alert alert-danger mb-3  py-1" role="alert">
-					    {{ err}}
-					</div>
-					<div v-if="msg" class="alert alert-dark mb-3 py-1" role="alert">
-					    {{ msg }}
-					</div>
+					<template v-else >
+						<div class="text-center" style="margin-top: 0; font-size:1.2rem; color:#666;">REGISTRATION CLOSED</div>
+					</template>
 		        </div>
 		    </div>
 			<div class="text-center">
@@ -143,6 +167,8 @@
 					email_otp:'',
 					err:'',
 					show_captcha: false,
+					s: <?=$login_enable?"true":"false" ?>,
+					login_enable: <?=$login_enable==true?"true":"false" ?>,
 				};
 			},
 			mounted(){

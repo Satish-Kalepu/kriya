@@ -9,6 +9,14 @@
 		echo "configuration pending..";exit;
 	}
 
+	if( $_SESSION['special4'] == "yes" ){
+	}else{
+		if( $login_enable == false ){
+			header("Location: /?event=RegistrationClosed");
+			exit;
+		}
+	}
+
 	include('db.php');
 	include('config.php');
 	
@@ -415,34 +423,36 @@
 		    </div>
 		</div>
 		<template v-if="is_registered" >
-		<div class="fs-1 text-center text-white">Selected Students</div>
-		<div v-if="selected_students.length" class="mb-4 p-2 w-100 overflow-auto">
-		    <table class="table table-bordered table-hover">
-				<thead style="background-color: #3B5998; color: white;">
-					<tr>
-						<th>#</th>
-						<th>Category</th>
-						<th>Name</th>
-						<th>Gender</th>
-						<th>Class</th>
-					</tr>
-				</thead>
-				<tbody style="background-color: #fff4d9;">
-					<tr v-for="student, s in selected_students" :key="s">
-						<td nowrap>{{ s + 1 }}</td>
-						<td nowrap>
-							<span v-if="student.item_id && config_categories[student.item_id]">
-	                            {{ config_categories[student.item_id].name }} [ {{student.category }} ]
-	                        </span>
-						</td>
-						<td nowrap>{{ student.name }}</td>
-						<td nowrap>{{ student.gender }}</td>
-						<td nowrap>{{ student.class }}</td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="container" >
+			<div class="fs-1 text-center text-white">Selected Students</div>
+			<div v-if="selected_students.length" class="mb-4 p-2 ">
+			    <table class="table table-bordered table-hover table-sm ">
+					<thead style="background-color: #3B5998; color: white;">
+						<tr>
+							<th>#</th>
+							<th>Category</th>
+							<th>Name</th>
+							<th>Gender</th>
+							<th>Class</th>
+						</tr>
+					</thead>
+					<tbody style="background-color: #fff4d9;">
+						<tr v-for="student, s in selected_students" :key="s">
+							<td nowrap>{{ s + 1 }}</td>
+							<td nowrap>
+								<span v-if="student.item_id && config_categories[student.item_id]">
+		                            {{ config_categories[student.item_id].name }} [ {{student.category }} ]
+		                        </span>
+							</td>
+							<td nowrap>{{ student.name }}</td>
+							<td nowrap>{{ student.gender }}</td>
+							<td nowrap>{{ student.class }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div v-else class="fs-4 text-center text-dark">You have not selected any students yet</div>
 		</div>
-		<div v-else class="fs-4 text-center text-dark">You have not selected any students yet</div>
 		</template>
 
 	<div class="modal fade" id="changeTypeModal" tabindex="-1" aria-labelledby="changeTypeModalLabel" aria-hidden="true">
